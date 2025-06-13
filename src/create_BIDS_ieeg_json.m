@@ -6,9 +6,6 @@ function create_BIDS_ieeg_json(path)
     % - path: path to data file. The name of the data file should be in
     % BIDS format. Character vector
 
-    % setup
-    addpath(genpath('/group/mlr-lab/Saskia/ECoG_central/dependencies'));
-
     % load details needed to create .json files. If the details file is
     % missing, create it
     if ~exist('/group/mlr-lab/Saskia/ECoG_central/work/details_for_json.mat')

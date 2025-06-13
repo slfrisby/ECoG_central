@@ -70,17 +70,20 @@ for q = 1:length(patients)
         
         % if it is naming data
         if contains(dataFiles(d).name,'naming')
-            % copy the file, renaming it according to BIDS naming
-            % conventions
-            copyfile([dataFiles(d).folder,'/',dataFiles(d).name],[root,'/data/sub-',p,'/ieeg/sub-',p,'_task-naming_run-01_ieeg.mat']);
-            % make sidecar .json
-            create_BIDS_ieeg_json([root,'/data/sub-',p,'/ieeg/sub-',p,'_task-naming_run-01_ieeg.mat']);
+            % set the BIDS filename
+            BIDSFilename = [root,'/data/sub-',p,'/ieeg/sub-',p,'_task-naming_run-01_ieeg.mat'];
         % or if it is semantic judgement data
         elseif contains(dataFiles(d).name,'SemJudge')
+            BIDSFilename = [root,'/data/sub-',p,'/ieeg/sub-',p,'_task-semanticjudgement_run-01_ieeg.mat'];
+        end
             % copy the file, renaming it according to BIDS naming
             % conventions
-            copyfile([dataFiles(d).folder,'/',dataFiles(d).name],[root,'/data/sub-',p,'/ieeg/sub-',p,'_task-semanticjudgement_run-01_ieeg.mat']);
-            create_BIDS_ieeg_json([root,'/data/sub-',p,'/ieeg/sub-',p,'_task-semanticjudgement_run-01_ieeg.mat']);
-        end
+            copyfile([dataFiles(d).folder,'/',dataFiles(d).name],BIDSFilename);
+            % fix a common electrode mislabelling problem
+            fix_electrode_labelling(BIDSFilename);
+            % make sidecar .json
+            create_BIDS_ieeg_json(BIDSFilename);
+            % make channels.tsv
+            create_BIDS_channels_tsv(BIDSFilename);
     end
 end
