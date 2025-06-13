@@ -1,6 +1,0 @@
-[submodule "dependencies/bids-starter-kit"]
-	path = dependencies/bids-starter-kit
-	url = https://github.com/bids-standard/bids-starter-kit.git
-[submodule "dependencies/bids-matlab"]
-	path = dependencies/bids-matlab
-	url = https://github.com/bids-standard/bids-matlab.git

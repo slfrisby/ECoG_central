@@ -83,8 +83,4 @@ function create_BIDS_channels_tsv(path)
     [filepath,name,~] = fileparts(path);
     writetable(tsvFile,[filepath,'/',erase(name,'ieeg'),'channels.tsv'],'filetype','text','delimiter','\t');
 
-
-    %% TODO: throw error if it can't find one of the specific channels when editing
-    %% TODO: BIDS validate
-    
 end
