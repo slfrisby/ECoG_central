@@ -20,11 +20,11 @@
 % that the line noise, filters, and trial lengths are set correctly for your data.
 
 % setup
-% add source code and dependencies to path
-addpath('/group/mlr-lab/Saskia/ECoG_central/src');
-addpath(genpath('/group/mlr-lab/Saskia/ECoG_central/dependencies'));
 % the root directory contains the /raw directory
 root = '/group/mlr-lab/Saskia/ECoG_central/';
+% add source code to path
+addpath([root,'/src']);
+
 cd(root);
 
 % 1. INITIALISE BIDS DIRECTORY STRUCTURE
@@ -65,6 +65,12 @@ for q = 1:length(patients)
     % get data files
     dataFiles = dir([root,'/raw/data/*',p,'*/*.mat']); 
 
+    % there are 2 naming data files for participant 22. We need the revised
+    % version, which includes EOG. So do a bug fix
+    if strcmp(p, '22')
+        dataFiles = dataFiles(strcmp({dataFiles.name},{'Pt22_namingERP_rev.mat'}));
+    end
+
     % for each data file
     for d = 1:length(dataFiles)
         
@@ -85,5 +91,13 @@ for q = 1:length(patients)
             create_BIDS_ieeg_json(BIDSFilename);
             % make channels.tsv
             create_BIDS_channels_tsv(BIDSFilename);
+            % make electrodes.tsv file unless it exists already
+            if ~exist([eraseBetween(BIDSFilename,'task','.mat','Boundaries','inclusive'),'electrodes.tsv'])
+                create_BIDS_electrodes_tsv(BIDSFilename);
+            end         
     end
 end
+
+% also add extra data files - including seizure onset zone information,
+% atlases, stimuli, and images and videos of some patients
+transfer_misc_files;

@@ -6,12 +6,15 @@ function create_BIDS_ieeg_json(path)
     % - path: path to data file. The name of the data file should be in
     % BIDS format. Character vector
 
+    % get root directory from path 
+    root = eraseBetween(path,'/data','.mat','Boundaries','inclusive');
+
     % load details needed to create .json files. If the details file is
     % missing, create it
-    if ~exist('/group/mlr-lab/Saskia/ECoG_central/work/details_for_json.mat')
+    if ~exist([root,'/work/details_for_json.mat'])
         specify_json_details;
     end
-    load('/group/mlr-lab/Saskia/ECoG_central/work/details_for_json.mat');
+    load([root,'/work/details_for_json.mat']);
 
     % from the path, get:
     % - the patient ID

@@ -6,6 +6,9 @@ function create_BIDS_channels_tsv(path)
     % - path: path to data file. The name of the data file should be in
     % BIDS format. Character vector
 
+    % get root directory from path 
+    root = eraseBetween(path,'/data','.mat','Boundaries','inclusive');
+
     % load data file
     tmp = load(path);
 
@@ -36,8 +39,8 @@ function create_BIDS_channels_tsv(path)
         lowPassFilter = 300;
     end
 
-    % setup channels.tsv file. Fill in each field with the most typical
-    % value
+    % setup channels.tsv file following this template: https://github.com/bids-standard/bids-starter-kit/blob/main/matlabCode/ieeg/createBIDS_channels_tsv.m
+    % fill in each field with the most typical value
     tsvFile = table(name);
     tsvFile.type = repmat({'ECOG'},length(name),1);
     tsvFile.units = repmat({'mV'},length(name),1);
@@ -50,10 +53,10 @@ function create_BIDS_channels_tsv(path)
     % the entries for those channels using the correct value using the
     % details file.
     % if the details file is missing, create it
-    if ~exist('/group/mlr-lab/Saskia/ECoG_central/work/details_for_channels_tsv.mat')
+    if ~exist([root,'/work/details_for_channels_tsv.mat'])
         specify_channel_details;
     end
-    load('/group/mlr-lab/Saskia/ECoG_central/work/details_for_channels_tsv.mat');
+    load([root,'/work/details_for_channels_tsv.mat']);
 
     % from the path, get:
     % - the patient ID
@@ -62,9 +65,6 @@ function create_BIDS_channels_tsv(path)
     % - the task
     tmp = extractBetween(path,'_task-','_run');
     task = tmp{1};
-    % - the run number
-    tmp = extractBetween(path,'_run-','_ieeg');
-    run = tmp{1};
 
     % find the row of channelDetails that corresponds to this patient and
     % task

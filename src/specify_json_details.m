@@ -271,7 +271,8 @@ jsonDetails(22).SubjectArtefactDescription =  'n/a';
 
 % save
 
-if ~exist('/group/mlr-lab/Saskia/ECoG_central/work/')
-	mkdir('/group/mlr-lab/Saskia/ECoG_central/work/');
+if ~exist([root,'/work/'])
+	mkdir([root,'/work/']);
 end
-save('/group/mlr-lab/Saskia/ECoG_central/work/details_for_json.mat','jsonDetails');
+save([root,'/work/details_for_json.mat'],'jsonDetails');
+

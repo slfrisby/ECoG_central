@@ -167,8 +167,7 @@ channelDetails(22).BadElectrode = {'D01'};
 channelDetails(22).BadElectrodeStatusDescription = {'seizure onset zone'};
 
 % save
-
-if ~exist('/group/mlr-lab/Saskia/ECoG_central/work/')
-	mkdir('/group/mlr-lab/Saskia/ECoG_central/work/');
+if ~exist([root,'/work/'])
+	mkdir([root,'/work/']);
 end
-save('/group/mlr-lab/Saskia/ECoG_central/work/details_for_channels_tsv.mat','channelDetails');
+save([root,'/work/details_for_channels_tsv.mat'],'channelDetails');
