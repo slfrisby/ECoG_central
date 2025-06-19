@@ -231,43 +231,103 @@ jsonDetails(19).TriggerChannelCount = 4;
 jsonDetails(19).iEEGReference = 'mastoid';
 jsonDetails(19).SubjectArtefactDescription =  'n/a';
 
-% the next 3 fields are semantic judgement
+% the next 8 fields are semantic judgement
 
-jsonDetails(20).Subject = '13';
+jsonDetails(20).Subject = '08';
 jsonDetails(20).Task = 'semanticjudgement';
-jsonDetails(20).SamplingFrequency = 1000; 
-jsonDetails(20).ECOGChannelCount = 82;
-jsonDetails(20).SEEGChannelCount = 0;
+jsonDetails(20).SamplingFrequency = 1000;
+jsonDetails(20).ECOGChannelCount = 76;
+jsonDetails(20).SEEGChannelCount = 18;
 jsonDetails(20).EOGChannelCount = 0;
-jsonDetails(20).ECGChannelCount = 1;
-jsonDetails(20).MiscChannelCount = 5;
-jsonDetails(20).TriggerChannelCount = 5;
+jsonDetails(20).ECGChannelCount = 0;
+jsonDetails(20).MiscChannelCount = 4;
+jsonDetails(20).TriggerChannelCount = 3;
 jsonDetails(20).iEEGReference = 'mastoid';
-jsonDetails(20).SubjectArtefactDescription =  'n/a';
+jsonDetails(20).SubjectArtefactDescription = 'n/a';
 
-jsonDetails(21).Subject = '14';
+jsonDetails(21).Subject = '10';
 jsonDetails(21).Task = 'semanticjudgement';
-jsonDetails(21).SamplingFrequency = 2000;
-jsonDetails(21).ECOGChannelCount = 92;
+jsonDetails(21).SamplingFrequency = 1000;
+jsonDetails(21).ECOGChannelCount = 106;
 jsonDetails(21).SEEGChannelCount = 0;
 jsonDetails(21).EOGChannelCount = 0;
-jsonDetails(21).ECGChannelCount = 0;
-jsonDetails(21).MiscChannelCount = 4;
-jsonDetails(21).TriggerChannelCount = 4;
+jsonDetails(21).ECGChannelCount = 1;
+jsonDetails(21).MiscChannelCount = 6;
+jsonDetails(21).TriggerChannelCount = 3;
 jsonDetails(21).iEEGReference = 'mastoid';
 jsonDetails(21).SubjectArtefactDescription =  'n/a';
 
-jsonDetails(22).Subject = '15';
+jsonDetails(22).Subject = '12';
 jsonDetails(22).Task = 'semanticjudgement';
-jsonDetails(22).SamplingFrequency = 2000;
-jsonDetails(22).ECOGChannelCount = 102;
+jsonDetails(22).SamplingFrequency = 1000;
+jsonDetails(22).ECOGChannelCount = 90;
 jsonDetails(22).SEEGChannelCount = 0;
 jsonDetails(22).EOGChannelCount = 0;
-jsonDetails(22).ECGChannelCount = 1;
-jsonDetails(22).MiscChannelCount = 4;
+jsonDetails(22).ECGChannelCount = 0;
+jsonDetails(22).MiscChannelCount = 6;
 jsonDetails(22).TriggerChannelCount = 3;
 jsonDetails(22).iEEGReference = 'mastoid';
 jsonDetails(22).SubjectArtefactDescription =  'n/a';
+
+jsonDetails(23).Subject = '13';
+jsonDetails(23).Task = 'semanticjudgement';
+jsonDetails(23).SamplingFrequency = 1000; 
+jsonDetails(23).ECOGChannelCount = 82;
+jsonDetails(23).SEEGChannelCount = 0;
+jsonDetails(23).EOGChannelCount = 0;
+jsonDetails(23).ECGChannelCount = 1;
+jsonDetails(23).MiscChannelCount = 5;
+jsonDetails(23).TriggerChannelCount = 5;
+jsonDetails(23).iEEGReference = 'mastoid';
+jsonDetails(23).SubjectArtefactDescription =  'n/a';
+
+jsonDetails(24).Subject = '14';
+jsonDetails(24).Task = 'semanticjudgement';
+jsonDetails(24).SamplingFrequency = 2000;
+jsonDetails(24).ECOGChannelCount = 92;
+jsonDetails(24).SEEGChannelCount = 0;
+jsonDetails(24).EOGChannelCount = 0;
+jsonDetails(24).ECGChannelCount = 0;
+jsonDetails(24).MiscChannelCount = 4;
+jsonDetails(24).TriggerChannelCount = 4;
+jsonDetails(24).iEEGReference = 'mastoid';
+jsonDetails(24).SubjectArtefactDescription =  'n/a';
+
+jsonDetails(25).Subject = '15';
+jsonDetails(25).Task = 'semanticjudgement';
+jsonDetails(25).SamplingFrequency = 2000;
+jsonDetails(25).ECOGChannelCount = 102;
+jsonDetails(25).SEEGChannelCount = 0;
+jsonDetails(25).EOGChannelCount = 0;
+jsonDetails(25).ECGChannelCount = 1;
+jsonDetails(25).MiscChannelCount = 4;
+jsonDetails(25).TriggerChannelCount = 3;
+jsonDetails(25).iEEGReference = 'mastoid';
+jsonDetails(25).SubjectArtefactDescription =  'n/a';
+
+jsonDetails(26).Subject = '17';
+jsonDetails(26).Task = 'semanticjudgement';
+jsonDetails(26).SamplingFrequency = 2000;
+jsonDetails(26).ECOGChannelCount = 128;
+jsonDetails(26).SEEGChannelCount = 0;
+jsonDetails(26).EOGChannelCount = 0;
+jsonDetails(26).ECGChannelCount = 1;
+jsonDetails(26).MiscChannelCount = 6;
+jsonDetails(26).TriggerChannelCount = 3;
+jsonDetails(26).iEEGReference = 'mastoid';
+jsonDetails(26).SubjectArtefactDescription =  'n/a';
+
+jsonDetails(27).Subject = '21'; 
+jsonDetails(27).Task = 'semanticjudgement';
+jsonDetails(27).SamplingFrequency = 2000;
+jsonDetails(27).ECOGChannelCount = 98; 
+jsonDetails(27).SEEGChannelCount = 0;
+jsonDetails(27).EOGChannelCount = 0;
+jsonDetails(27).ECGChannelCount = 1;
+jsonDetails(27).MiscChannelCount = 4;
+jsonDetails(27).TriggerChannelCount = 4;
+jsonDetails(27).iEEGReference = 'mastoid';
+jsonDetails(27).SubjectArtefactDescription =  'n/a';
 
 % save
 

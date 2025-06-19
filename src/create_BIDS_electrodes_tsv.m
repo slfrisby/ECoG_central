@@ -10,7 +10,9 @@ function create_BIDS_electrodes_tsv(path)
     root = eraseBetween(path,'/data','.mat','Boundaries','inclusive');
 
     % load coordinates file 
-    allCoords = readtable([root,'/src/mni_coordinates.xlsx']);
+    opts = detectImportOptions([root,'/doc/mni_coordinates.csv']);  
+    opts = setvartype(opts, [1:5], 'char'); 
+    allCoords = readtable([root,'/doc/mni_coordinates.csv'],opts);
 
     % from the path, get the patient ID (electrodes.tsv files are the same
     % for all tasks)

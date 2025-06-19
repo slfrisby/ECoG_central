@@ -1,0 +1,3 @@
+[submodule "dependencies/ECoG_Data_Prep"]
+	path = dependencies/ECoG_Data_Prep
+	url = https://github.com/crcox/ECoG_Data_Prep

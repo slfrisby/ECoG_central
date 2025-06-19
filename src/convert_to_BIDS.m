@@ -9,15 +9,7 @@
 % that each patient has the same number of digits in the patient ID (e.g.
 % Pt01, ... Pt22, NOT Pt1, ... Pt22). In those directories, put the .mat 
 % files containing that participant's ECoG data.
-% 
-% ALSO BEFORE YOU BEGIN, make the following edits:
-% - edit src/README.md to suit the dataset that you are working with.
-% Templates and guidance can be found here:
-% https://bids.neuroimaging.io/getting_started/templates/index.html#dataset_description.json
-% - edit specify_json_details.m to provide the correct details for your
-% patients.
-% - edit create_BIDS_ieeg.json. Ensure that the file paths are correct and
-% that the line noise, filters, and trial lengths are set correctly for your data.
+
 
 % setup
 % the root directory contains the /raw directory
@@ -45,7 +37,13 @@ fclose(fid);
 % contents!)
 copyfile([root,'/src/README.md'],[root,'/data/README.md']);
 
-% 2. ORGANISE DATA
+% 2. ORGANISE ADDITIONAL INFORMATION
+
+% this includes extra data files - including seizure onset zone information,
+% atlases, stimuli, and images and videos of some patients
+transfer_misc_files;
+
+% 3. ORGANISE DATA
 
 % get all folders in the /raw/data directory
 patients = dir([root,'/raw/data/*']);
@@ -98,6 +96,4 @@ for q = 1:length(patients)
     end
 end
 
-% also add extra data files - including seizure onset zone information,
-% atlases, stimuli, and images and videos of some patients
-transfer_misc_files;
+
