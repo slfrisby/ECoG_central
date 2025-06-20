@@ -1,15 +1,6 @@
 % converts raw ECoG and sEEG naming and semantic judgement data to BIDS 
-% format. This makes it easy to use and share data. NPTE: the BIDS 
+% format. This makes it easy to use and share data. NOTE: the BIDS 
 % formatting will not be perfect, but imperfect BIDS format is still helpful!
-
-% BEFORE YOU BEGIN, set up a directory structure like this:
-% - create a directory called /raw.
-% - within /raw, create the following directories:
-% -- /data. Within /data, create a directory for each patient. Ensure 
-% that each patient has the same number of digits in the patient ID (e.g.
-% Pt01, ... Pt22, NOT Pt1, ... Pt22). In those directories, put the .mat 
-% files containing that participant's ECoG data.
-
 
 % setup
 % the root directory contains the /raw directory

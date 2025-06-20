@@ -35,6 +35,7 @@ copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimul
 % - stimulus presentation information for semantic judgement 
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/SemanticJudgementERP_explanation_202211.pdf','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/presentation_information_1.pdf');
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/20250616Anonymized_explanation.docx','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/presentation_information_2.docx');
+copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/README_Pt13.txt','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/presentation_information_3.txt');
 
 % add extra info to patients' data folders:
 % - video of patient 13 doing semantic judgement
