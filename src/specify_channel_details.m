@@ -69,8 +69,8 @@ channelDetails(9).Subject = '09';
 channelDetails(9).Task = 'naming';
 channelDetails(9).NotECoG = {'A01';'A02';'A03';'A04';'A05';'B01';'B02';'B03';'B04';'B05';'C01';'C02';'C03';'C04';'C05';'DC01';'DC03';'DC04';'REF01';'REF02';'REF03';'REF04';'REF05';'REF06'};
 channelDetails(9).NotECoGType = {'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'TRIG';'TRIG';'TRIG';'REF';'REF';'REF';'REF';'REF';'REF'};
-channelDetails(9).BadElectrode = {'D19';'J05';'K08';'K16'};
-channelDetails(9).BadElectrodeStatusDescription = {'seizure onset zone'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'};
+channelDetails(9).BadElectrode = {'D19';'J05'};
+channelDetails(9).BadElectrodeStatusDescription = {'seizure onset zone'; 'overlaps another grid - no contact with brain'};
 
 channelDetails(10).Subject = '10';
 channelDetails(10).Task = 'naming';
