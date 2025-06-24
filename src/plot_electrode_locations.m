@@ -1,4 +1,5 @@
-% visualise electrodes on the cortical surface. 
+% visualise electrodes on the cortical surface. Also create an overlap plot
+% showing density of electrode coverage.
 
 % setup
 root = '/group/mlr-lab/Saskia/ECoG_central/';
@@ -15,8 +16,8 @@ header = spm_vol([root,'/doc/MMNI152_T1_2mm_brain_nocereb.nii.gz']);
 % get transformation matrix
 T = header.mat;
 % make empty volumes the same size as the atlas
-namingVolume = nan(header.dim);
-semanticJudgementVolume = nan(header.dim);
+namingElectrodes = nan(header.dim);
+semanticJudgementElectrodes = nan(header.dim);
 
 % load electrode locations
 namingCoords = readtable([root,'/doc/mni_coordinates.csv']);
@@ -38,12 +39,12 @@ semanticJudgementCoords = mni2cor(semanticJudgementCoords,T);
 % for each electrode in the naming data
 for i = 1:size(namingCoords,1)
     % set that value in the volume as 1
-    namingVolume(namingCoords(i,1),namingCoords(i,2),namingCoords(i,3)) = 1;
+    namingElectrodes(namingCoords(i,1),namingCoords(i,2),namingCoords(i,3)) = 1;
 end
 % for each electrode in the semantic judgement data
 for i = 1:size(semanticJudgementCoords,1)
     % set that value in the volume as 1
-    semanticJudgementVolume(semanticJudgementCoords(i,1),semanticJudgementCoords(i,2),semanticJudgementCoords(i,3)) = 1;
+    semanticJudgementElectrodes(semanticJudgementCoords(i,1),semanticJudgementCoords(i,2),semanticJudgementCoords(i,3)) = 1;
 end
 
 % save image. Using niftiwrite preserves nans in the image,
@@ -53,13 +54,13 @@ end
 if ~exist([root,'/work'])
     mkdir([root,'/work'])
 end
-niftiwrite(namingVolume,[root,'/work/namingVolume.nii']);
-niftiwrite(semanticJudgementVolume,[root,'/work/semanticJudgementVolume.nii']);
+niftiwrite(namingElectrodes,[root,'/work/namingElectrodes.nii']);
+niftiwrite(semanticJudgementElectrodes,[root,'/work/semanticJudgementElectrodes.nii']);
 
 % smooth at 2mm FWHM. This makes it easy to visualise electrodes 
 
 clear matlabbatch
-matlabbatch{1}.spm.spatial.smooth.data = cellstr([root,'/work/namingVolume.nii']);
+matlabbatch{1}.spm.spatial.smooth.data = cellstr([root,'/work/namingElectrodes.nii']);
 matlabbatch{1}.spm.spatial.smooth.fwhm = [2 2 2];
 matlabbatch{1}.spm.spatial.smooth.dtype = 0;
 matlabbatch{1}.spm.spatial.smooth.im = 0;
@@ -67,7 +68,7 @@ matlabbatch{1}.spm.spatial.smooth.prefix = 'smoothed_';
 spm_jobman('run',matlabbatch);
 
 clear matlabbatch
-matlabbatch{1}.spm.spatial.smooth.data = cellstr([root,'/work/semanticJudgementVolume.nii']);
+matlabbatch{1}.spm.spatial.smooth.data = cellstr([root,'/work/semanticJudgementElectrodes.nii']);
 matlabbatch{1}.spm.spatial.smooth.fwhm = [2 2 2];
 matlabbatch{1}.spm.spatial.smooth.dtype = 0;
 matlabbatch{1}.spm.spatial.smooth.im = 0;
@@ -75,26 +76,26 @@ matlabbatch{1}.spm.spatial.smooth.prefix = 'smoothed_';
 spm_jobman('run',matlabbatch);
 
 % load image
-tmp = spm_vol([root,'/work/smoothed_namingVolume.nii']);
-namingVolume = spm_read_vols(tmp);
+tmp = spm_vol([root,'/work/smoothed_namingElectrodes.nii']);
+namingElectrodes = spm_read_vols(tmp);
 % binarise above threshold (for clarity of the resulting image) 
-namingVolume(namingVolume > 0.001) = 1;
-namingVolume(namingVolume < 1) = 0;
+namingElectrodes(namingElectrodes > 0.001) = 1;
+namingElectrodes(namingElectrodes < 1) = 0;
 % fix header
 tmp = header;
 tmp.fname = [root,'/derivatives/figures/electrodes_naming.nii'];
 % write
-spm_write_vol(tmp,namingVolume);
+spm_write_vol(tmp,namingElectrodes);
 
 % load image
-tmp = spm_vol([root,'/work/smoothed_semanticJudgementVolume.nii']);
-semanticJudgementVolume = spm_read_vols(tmp);
+tmp = spm_vol([root,'/work/smoothed_semanticJudgementElectrodes.nii']);
+semanticJudgementElectrodes = spm_read_vols(tmp);
 % binarise above threshold (for clarity of the resulting image) 
-semanticJudgementVolume(semanticJudgementVolume > 0.001) = 1;
-semanticJudgementVolume(semanticJudgementVolume < 1) = 0;
+semanticJudgementElectrodes(semanticJudgementElectrodes > 0.001) = 1;
+semanticJudgementElectrodes(semanticJudgementElectrodes < 1) = 0;
 % fix header
 tmp = header;
 tmp.fname = [root,'/derivatives/figures/electrodes_semanticjudgement.nii'];
 % write
-spm_write_vol(tmp,semanticJudgementVolume);
+spm_write_vol(tmp,semanticJudgementElectrodes);
 

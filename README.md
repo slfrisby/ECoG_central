@@ -17,7 +17,9 @@ Preprocess all Kyoto ECoG data. These data can then be copied and used in a wide
 4. **Convert data to BIDS format** (well, imperfect BIDS format!) using `convert_to_BIDS.m`.
 
 ## Optional steps:
-- Use `plot_electrode_locations.m` to visualise electrodes on the brain. 
+- Use `plot_electrode_locations.m` to visualise electrodes on the brain for the whole participant group.
+- Use `check_electrode_labelling.m` to create a figure that can be used to conduct a *very* quick visual check of whether a participant's electrodes have been labelled correctly.
+- Use `plot_electrode_density.m` to visualise coverage overlap between participants (N.B. this visualisation is a work in progress!)
 
 ## Useful links
 - Overview of iEEG-BIDS structure: https://bids.neuroimaging.io/getting_started/tutorials/conversion/ieeg.html?h=ieeg
