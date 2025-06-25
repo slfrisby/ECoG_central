@@ -4,9 +4,6 @@
 [submodule "dependencies/SASICA"]
 	path = dependencies/SASICA
 	url = https://github.com/dnacombo/SASICA.git
-[submodule "dependencies/eeglab"]
-	path = dependencies/eeglab
-	url = https://github.com/sccn/eeglab.git
 [submodule "dependencies/cleanline"]
 	path = dependencies/cleanline
 	url = https://github.com/sccn/cleanline.git
