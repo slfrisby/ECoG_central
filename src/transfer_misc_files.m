@@ -21,9 +21,10 @@ copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/mni_coordinates.csv','/gr
 % - atlas
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/MMNI152_T1_2mm_brain_nocereb.nii.gz','/group/mlr-lab/Saskia/ECoG_central/doc/MMNI152_T1_2mm_brain_nocereb.nii.gz');
 
-% - folders and lFists of naming stimuli
+% - folders and lists of naming stimuli
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/naming_stimuli','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/naming/naming/');
-copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/picture_namingERP_list.xls','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/naming/stimuli.xls');
+copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/picture_namingERP_order.csv','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/naming/order.csv');
+copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/picture_namingERP_key.csv','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/naming/key.csv');
 
 % - folders of semantic judgement stimuli
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/semantic_judge_jpg','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/visual_semantic');

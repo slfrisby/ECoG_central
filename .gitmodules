@@ -1,3 +1,15 @@
 [submodule "dependencies/ECoG_Data_Prep"]
 	path = dependencies/ECoG_Data_Prep
 	url = https://github.com/crcox/ECoG_Data_Prep
+[submodule "dependencies/SASICA"]
+	path = dependencies/SASICA
+	url = https://github.com/dnacombo/SASICA.git
+[submodule "dependencies/eeglab"]
+	path = dependencies/eeglab
+	url = https://github.com/sccn/eeglab.git
+[submodule "dependencies/cleanline"]
+	path = dependencies/cleanline
+	url = https://github.com/sccn/cleanline.git
+[submodule "dependencies/glmnet-matlab"]
+	path = dependencies/glmnet-matlab
+	url = https://github.com/junyangq/glmnet-matlab.git
