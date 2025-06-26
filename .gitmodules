@@ -10,6 +10,3 @@
 [submodule "dependencies/glmnet-matlab"]
 	path = dependencies/glmnet-matlab
 	url = https://github.com/junyangq/glmnet-matlab.git
-[submodule "dependencies/eeglab"]
-	path = dependencies/eeglab
-	url = https://sccn/eeglab

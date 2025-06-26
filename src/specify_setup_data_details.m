@@ -10,6 +10,7 @@ end
 
 % copy stimulus presentation orders into directory
 copyfile([root,'/doc/stimuli/naming/order.csv'],[root,'/work/details_for_setup_data/stimuli/naming_order.csv']);
+copyfile([root,'/doc/stimuli/semanticjudgement/order.csv'],[root,'/work/details_for_setup_data/stimuli/semantic_judgement_order.csv']);
 
 % make directory containing coordinates of only good electrodes (i.e. not
 % those that were below the seizure onset zone or had bad contact). 

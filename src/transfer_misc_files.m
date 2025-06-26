@@ -31,8 +31,10 @@ copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimul
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/judge_scrambled_img','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/visual_control');
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/semantic_judge_wav','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/auditory_semantic');
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/noise_wavs','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/auditory_control');
-% - list of semantic judgement stimuli
-copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/semantic_judgment_items_Sheet_2022forCambridge.xls','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/stimuli.xls');
+% - lists of semantic judgement stimuli
+copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_key.csv','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/key.csv');
+% (use the key file to generate the order file)
+create_semantic_judgement_order;
 % - stimulus presentation information for semantic judgement 
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/semantic_judgement_stimuli_and_presentation_order/SemanticJudgementERP_explanation_202211.pdf','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/presentation_information_1.pdf');
 copyfile('/group/mlr-lab/Saskia/ECoG_central/raw/notes/20250616Anonymized_explanation.docx','/group/mlr-lab/Saskia/ECoG_central/doc/stimuli/semanticjudgement/presentation_information_2.docx');

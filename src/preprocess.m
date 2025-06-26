@@ -13,8 +13,8 @@ function preprocess(p)
     % eeglab should have the cleanline and SASICA plugins installed. To 
     % adapt SASICA for ECoG, open eeg_SASICA.m and comment out lines 148-150
     % and 711-818.
-    addpath(genpath([root,'/dependencies/eeglab']));
-    addpath(genpath([root,'/dependencies/cleanline']));
+    addpath([root,'/dependencies/eeglab']);
+    addpath([root,'/dependencies/cleanline']);
     addpath(genpath([root,'/dependencies/ECoG_Data_Prep']));
     cd(root);
  
@@ -65,6 +65,9 @@ function preprocess(p)
             EEG.data = data.(structs2load{s}).DATA';
             EEG.srate = json.SamplingFrequency; 
             EEG.subject = ['sub-',p];
+            EEG.icawinv = [];
+            EEG.icaweights = [];
+            EEG.icasphere = [];
             % ...and use the toolbox's built-in function to check that the
             % structures are set up correctly.
             EEG = eeg_checkset(EEG); 
@@ -218,7 +221,6 @@ function preprocess(p)
         'dataroot', [root,'/work/sub-',p], ...
         'metaroot', [root,'/work/details_for_setup_data/'], ...
         'datarootout', [root,'/work/sub-',p], ...
-        'cvpath', [root,'/dependencies/data/cv/cvpartition_10fold_DilkinaSplit.mat'], ...
         'overwrite', 1);
 
     elseif strcmp(task,'semanticjudgement')
@@ -232,11 +234,9 @@ function preprocess(p)
         'average', 0, ...
         'datacode', '', ...
         'dataroot', [root,'/work/sub-',p], ...
-        'metaroot', [root,'/work/metadata_input/'], ...
+        'metaroot', [root,'/work/details_for_setup_data/'], ...
         'datarootout', [root,'/work/sub-',p], ...
-        'cvpath', [root,'/work/metadata_input/cv/cvpartition_10fold_DilkinaSplit.mat'], ...
-        'overwrite', 1, ...
-        'WriteIndividualMetadata', 1);
+        'overwrite', 1);
 
     end
 

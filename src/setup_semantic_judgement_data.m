@@ -1,4 +1,4 @@
-function setup_naming_data(varargin)
+function setup_semantic_judgement_data(varargin)
     % Adapted from setup_data (ECoG_Data_Prep).
 
     p = parse_from_matlab_or_json(varargin{:});
@@ -23,9 +23,9 @@ function setup_naming_data(varargin)
 
     %% Define Output directory
     if AverageOverSessions == 1
-        base_dir = 'naming/avg';
+        base_dir = 'semanticjudgement/avg';
     else
-        base_dir = 'naming/full';
+        base_dir = 'semanticjudgement/full';
     end
     DATA_DIR_OUT = fullfile(...
         DATA_ROOT_OUT,...
@@ -48,9 +48,11 @@ function setup_naming_data(varargin)
     fprintf('Subjects:\n');
     disp(SUBJECTS)
 
+    %%%%
+
     %% Read presentation order from file
     % All subjects have the same order
-    file_stim_order = fullfile(STIM_DIR, 'naming_order.csv');
+    file_stim_order = fullfile(STIM_DIR, 'semantic_judgement_order.csv');
     stim_order = readtable(file_stim_order);
     nsessions = numel(unique(stim_order.Session));
 
@@ -61,13 +63,18 @@ function setup_naming_data(varargin)
     for i = 1:size(x,1)
         [~,stim_sort_ix{i}] = sort(stim_order_ix{i});
     end
+    % note that stimuli are presented twice per block, so two consecutive
+    % values in the sort index denote the same stimulus. E.g. suppose the
+    % first value in the sort index is 40 and the second is 91. This means
+    % that stimulus 1 appears 40th AND 91st. 
 
     % Load coordinates
-    tmp = readtable(fullfile(COORD_DIR,'naming_electrodes.csv'));
+    tmp = readtable(fullfile(COORD_DIR,'semantic_judgement_electrodes.csv'));
     subject = tmp.Patient;
     electrode = tmp.Electrode;
     x = tabulate(subject);
     ELECTRODE = mat2cell(electrode,x(:,2),1);
+
    
     %% Load And Process Data
     % NOTE: In the source data, naming conventions are not consistent. The
@@ -76,119 +83,54 @@ function setup_naming_data(varargin)
 
     DATA = [];
     
-    filelist(1).subject = 1;
-    filelist(1).filename = 'sub-01_task-naming_filtered.mat'; 
-    filelist(1).variables = {'Pt01_namingERP_anony'};
-    filelist(1).sessions = {1:4};
-    filelist(1).sessiontag = 'ERP_tag%02d';
+    filelist(1).subject = 8;
+    filelist(1).filename = 'sub-08_task-semanticjudgement_filtered.mat'; 
+    filelist(1).variables = {'SemJudgeERP_Pt08_ANONY'};
+    filelist(1).sessions = {1:10};
+    filelist(1).sessiontag = {'ss01_vis01','ss03_vis02','ss05_vis03','ss02_aud01','ss04_aud02','ss06_aud03','ss07_vis_ctrl01','ss09_vis_ctrl02','ss08_aud_ctrl01','ss10_aud_ctrl02'};
 
-    filelist(2).subject = 2;
-    filelist(2).filename = 'sub-02_task-naming_filtered.mat'; 
-    filelist(2).variables = {'Pt02_namingERP_anony'};
-    filelist(2).sessions = {1:4};
-    filelist(2).sessiontag = 'tag%02d_all';
+    filelist(2).subject = 10;
+    filelist(2).filename = 'sub-10_task-semanticjudgement_filtered.mat';
+    filelist(2).variables = {'SemJudgeERP_Pt10_ANONY'};
+    filelist(2).sessions = {1:10};
+    filelist(2).sessiontag = {'ss01_vis01','ss04_vis02','ss09_vis03','ss02_aud01','ss03_aud02','ss10_aud3','ss05_vis_ctrl01','ss06_vis_ctrl02','ss07_aud_ctrl01','ss08_aud_ctrl02'};
+    
+    % Patient 12 also has separate tags for living and nonliving trials
+    filelist(3).subject = 12;
+    filelist(3).filename = 'sub-12_task-semanticjudgement_filtered.mat'; 
+    filelist(3).variables = {'SemJudgeERP_Pt12_ANONY'};
+    filelist(3).sessions = {1:10};
+    filelist(3).sessiontag = {'ss01_vis01','ss04_vis02','ss10_vis03','ss02_aud01','ss03_aud02','ss09_aud03','ss05_vis_ctrl01','ss08_vis_ctrl02','ss06_aud_ctrl01','ss07_aud_ctrl02'};
 
-    filelist(3).subject = 3;
-    filelist(3).filename = 'sub-03_task-naming_filtered.mat'; 
-    filelist(3).variables = {'Pt03_namingERP_anony'};
-    filelist(3).sessions = {1:4};
-    filelist(3).sessiontag = 'tag%02d_all';
+    filelist(4).subject = 13;
+    filelist(4).filename = 'sub-13_task-semanticjudgement_filtered.mat'; 
+    filelist(4).variables = {'SemJudgeERP_Pt13_ANONY'};
+    filelist(4).sessions = {1:10};
+    filelist(4).sessiontag = {'ss01_vis01','ss04_vis02','ss10_vis03','ss02_aud01','ss03_aud02','ss09_aud03','ss05_vis_ctrl01','ss08_vis_ctrl02','ss06_aud_ctrl01','ss07_aud_ctrl02'};
 
-    filelist(4).subject = 4;
-    filelist(4).filename = 'sub-04_task-naming_filtered.mat'; 
-    filelist(4).variables = {'Pt04_namingERP_anony_SS01_02','Pt04_namingERP_anony_SS03_04'};
-    filelist(4).sessions = {1:2,3:4};
-    filelist(4).sessiontag = 'tag_ss%02d';
+    filelist(5).subject = 14;
+    filelist(5).filename = 'sub-14_task-semanticjudgement_filtered.mat'; 
+    filelist(5).variables = {'SemJudgeERP_Pt14_ANONY'};
+    filelist(5).sessions = {1:10};
+    filelist(5).sessiontag = {'ss01_vis01','ss04_vis02','ss10_vis03','ss02_aud01','ss03_aud02','ss09_aud03','ss05_visctrl01','ss08_visctrl02','ss06_audctrl01','ss07_audctrl02'};
 
-    filelist(5).subject = 5;
-    filelist(5).filename = 'sub-05_task-naming_filtered.mat'; 
-    filelist(5).variables = {'Pt05_namingERP_anony_01'};
-    filelist(5).sessions = {1:4};
-    filelist(5).sessiontag = 'tag_ss%02d';
+    filelist(6).subject = 15;
+    filelist(6).filename = 'sub-15_task-semanticjudgement_filtered.mat'; 
+    filelist(6).variables = {'SemJudgeERP_Pt15_ANONY'};
+    filelist(6).sessions = {1:10};
+    filelist(6).sessiontag = {'ss01_visual01','ss04_visual02','ss07_visual03','ss02_auditory01','ss03_auditory02','ss08_auditory03','ss05_vis_control01','ss10_vis_control02','ss06_aud_control01','ss09_aud_control02'};
 
-    filelist(6).subject = 6;
-    filelist(6).filename = 'sub-06_task-naming_filtered.mat'; 
-    filelist(6).variables = {'Pt06_namingERP_anony'};
-    filelist(6).sessions = {1:4};
-    filelist(6).sessiontag = 'tag%02d_all';
+    filelist(7).subject = 17;
+    filelist(7).filename = 'sub-17_task-semanticjudgement_filtered.mat';
+    filelist(7).variables = {'SemJudgeERP_Pt17_ANONY'};
+    filelist(7).sessions = {1:10};
+    filelist(7).sessiontag = {'ss01_vis01','ss04_vis02','ss07_vis03','ss02_aud01','ss03_aud02','ss08_aud03','ss05_vis_ctrl01','','ss06_aud_ctrl01',''};
 
-    filelist(7).subject = 7;
-    filelist(7).filename = 'sub-07_task-naming_filtered.mat'; 
-    filelist(7).variables = {'Pt07_namingERP_anony_SS01_02','Pt07_namingERP_anony_SS03_04'};
-    filelist(7).sessions = {1:2,3:4};
-    filelist(7).sessiontag = 'tag%02d_all';
-
-    filelist(8).subject = 8;
-    filelist(8).filename = 'sub-08_task-naming_filtered.mat'; 
-    filelist(8).variables = {'Pt08_namingERP_anony'};
-    filelist(8).sessions = {1:4};
-    filelist(8).sessiontag = 'tag_%02d';
-
-    filelist(9).subject = 9;
-    filelist(9).filename = 'sub-09_task-naming_filtered.mat'; 
-    filelist(9).variables = {'Pt09_namingERP_anony'};
-    filelist(9).sessions = {1:4};
-    filelist(9).sessiontag = 'nam_tag%02d';
-
-    filelist(10).subject = 10;
-    filelist(10).filename = 'sub-10_task-naming_filtered.mat'; 
-    filelist(10).variables = {'Pt10_namingERP_anony'};
-    filelist(10).sessions = {1:4};
-    filelist(10).sessiontag = 'tagall%02d';
-
-    filelist(11).subject = 11;
-    filelist(11).filename = 'sub-11_task-naming_filtered.mat'; 
-    filelist(11).variables = {'Pt11_namingERP_anony'};
-    filelist(11).sessions = {1:4};
-    filelist(11).sessiontag = 'tagss%02d';
-
-    filelist(12).subject = 12;
-    filelist(12).filename = 'sub-12_task-naming_filtered.mat'; 
-    filelist(12).variables = {'Pt12_namingERP_anony'};
-    filelist(12).sessions = {1:4};
-    filelist(12).sessiontag = 'nam_%02d';
-
-    filelist(13).subject = 13;
-    filelist(13).filename = 'sub-13_task-naming_filtered.mat'; 
-    filelist(13).variables = {'namingERP_Pt13_ANONY'};
-    filelist(13).sessions = {1:4};
-    filelist(13).sessiontag = 'tag_nam%02d';
-
-    filelist(14).subject = 14;
-    filelist(14).filename = 'sub-14_task-naming_filtered.mat'; 
-    filelist(14).variables = {'namingERP_Pt14_ANONY'};
-    filelist(14).sessions = {1:4};
-    filelist(14).sessiontag = 'ss%02d';
-
-    filelist(15).subject = 15;
-    filelist(15).filename = 'sub-15_task-naming_filtered.mat'; 
-    filelist(15).variables = {'namingERP_Pt15_ANONY'};
-    filelist(15).sessions = {1:4};
-    filelist(15).sessiontag = 'tag%02d';
-
-    filelist(16).subject = 17;
-    filelist(16).filename = 'sub-17_task-naming_filtered.mat';
-    filelist(16).variables = {'namingERP_Pt17_ANONY'};
-    filelist(16).sessions = {1:4};
-    filelist(16).sessiontag = 'tag_ss%02d';
-
-    filelist(17).subject = 20;
-    filelist(17).filename = 'sub-20_task-naming_filtered.mat';
-    filelist(17).variables = {'namingERP_Pt20_ANONY'};
-    filelist(17).sessions = {1:4};
-    filelist(17).sessiontag = 'Tag1_ss%01d';
-
-    filelist(18).subject = 21;
-    filelist(18).filename = 'sub-21_task-naming_filtered.mat';
-    filelist(18).variables = {'namingERP_Pt21_ANONY'};
-    filelist(18).sessions = {1:4};
-    filelist(18).sessiontag = 'tag_ss%02d';
-
-    filelist(19).subject = 22;
-    filelist(19).filename = 'sub-22_task-naming_filtered.mat';
-    filelist(19).variables = {'SemJudgeERP_Pt22_ANONY_wEOG'}; % Akihiro confirms that this is naming data - the variable is mislabelled
-    filelist(19).sessions = {1:4};
-    filelist(19).sessiontag = 'tag_ss%02d';
+    filelist(8).subject = 21;
+    filelist(8).filename = 'sub-21_task-semanticjudgement_filtered.mat';
+    filelist(8).variables = {'SemJudgeERP_Pt21_ANONY'};
+    filelist(8).sessions = {1:10};
+    filelist(8).sessiontag = {'ss01_vis01','ss04_vis02','ss09_vis03','ss02_aud01','ss03_aud02','ss10_aud03','ss05_vis_ctrl01','ss08_vis_ctrl02','ss06_aud_ctrl01','ss07_aud_ctrl02'};
 
     for iSubject=1:numel(SUBJECTS)
         F = selectbyfield(filelist, 'subject', SUBJECTS(iSubject));
