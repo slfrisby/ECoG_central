@@ -7,7 +7,6 @@ function setup_semantic_judgement_data(varargin)
     WindowSizeInMilliseconds = p.Results.WindowSize;
     BaselineSizeInMilliseconds = p.Results.BaselineWindow;
     BoxCarSize = p.Results.boxcar;
-    SlopeInterval = p.Results.slope_interval;
     AverageOverSessions = p.Results.average;
     OVERWRITE = p.Results.overwrite;
     SUBJECTS = p.Results.subjects;
@@ -47,8 +46,6 @@ function setup_semantic_judgement_data(varargin)
     fprintf('Processed data will be written to:\n\t%s\n', DATA_DIR_OUT);
     fprintf('Subjects:\n');
     disp(SUBJECTS)
-
-    %%%%
 
     %% Read presentation order from file
     % All subjects have the same order
@@ -200,12 +197,24 @@ function setup_semantic_judgement_data(varargin)
         zc = ismember(ecoord, edata);
         ecoord = ecoord(zc);
      
-        tagfmt = F.sessiontag;
-        stim_order.OnsetIndex = zeros(size(stim_order,1),1);
+        stim_order.OnsetIndex = nan(size(stim_order,1),1);
         for iSession = 1:nsessions
-            tagname = sprintf(tagfmt,iSession);
+            tmp = F.sessiontag(iSession);
+            tagname = tmp{1};
             z = stim_order.Session == iSession;
-            stim_order.OnsetIndex(z) = Pt.(tagname);
+            % if the patient did not do that session
+            if ~isfield(Pt,tagname)
+                % leave the onset indices of the missing trials as nans
+                continue
+            else
+                % if some trials are missing (i.e. if the onset is nan)
+                if size(Pt.(tagname),2) < 96
+                    % leave the onset indices of the missing trials as nans
+                    stim_order.OnsetIndex(z) = [Pt.(tagname),nan(1, 96 - size(Pt.(tagname),2))];
+                else
+                    stim_order.OnsetIndex(z) = Pt.(tagname);
+                end  
+            end
         end
 
         Hz = 1 / Pt.LFP.DIM(1).interval; % ticks per second
@@ -213,18 +222,9 @@ function setup_semantic_judgement_data(varargin)
 
         % Will return a session -by- electrode cell array, each containing a
         % trial -by- time matrix.
-        % NOTE: IF SLOPE INTERVAL IS 0, then each data points is the
-        % average LFP within a boxcar. If greater than zero, then each
-        % datapoint is the slope of the best fit line within that given
-        % interval. Each interval is centered on the middle of where the
-        % boxcar would have been.
-        disp([WindowStartInMilliseconds, WindowSizeInMilliseconds]);
-        if SlopeInterval > 0
-            TargetResolution = BoxCarSize;
-            ECA = pull_trial_profiles_derivatives(Pt.LFP, stim_order, [WindowStartInMilliseconds, WindowSizeInMilliseconds], TargetResolution, SlopeInterval, ecoord);
-        else
-            ECA = pull_trial_profiles(Pt.LFP, stim_order, [WindowStartInMilliseconds, WindowSizeInMilliseconds], BaselineSizeInMilliseconds, BoxCarSize, ecoord);
-        end
+        disp([WindowStartInMilliseconds, WindowSizeInMilliseconds]);  
+        ECA = pull_trial_profiles(Pt.LFP, stim_order, [WindowStartInMilliseconds, WindowSizeInMilliseconds], BaselineSizeInMilliseconds, BoxCarSize, ecoord);
+
         % Average over sessions?
         if AverageOverSessions
             % data array is sessions x items x time, and mean operates over
@@ -246,7 +246,7 @@ function setup_semantic_judgement_data(varargin)
         if exist(dpath_out,'file') && ~OVERWRITE
             fprintf('Subject %d not written to disk, %s because output already exists.\n',SUBJECTS(iSubject))
         else
-            save(dpath_out, 'X');
+            save(dpath_out, 'X','-v7.3');
             fprintf('Subject written to %s\n', dpath_out);
         end
         Pt = [];

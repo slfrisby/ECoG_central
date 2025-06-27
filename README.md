@@ -15,6 +15,11 @@ Preprocess all Kyoto ECoG data. These data can then be copied and used in a wide
 	- `transfer_misc_files.m` gets useful information about the data (clinical details, MNI coordinates, stimuli, etc.) and saves these files in one organised directory. 
 	- `src/README.md` describes the data for the benefit of future users of your dataset. Guidance on what to include can be found here: https://bids.neuroimaging.io/getting_started/templates/index.html#dataset_description.json
 4. **Convert data to BIDS format** (well, imperfect BIDS format!) using `convert_to_BIDS.m`.
+5. **Run the hands-free section of the preprocessing pipeline** using `preprocess.m`. If you have access to a high-performance cluster, use `sub_job.sh` to preprocess all participants in parallel.
+
+**TODO**: explain trial order:
+- naming 1:50 living, 51:100 nonliving, in 4 blocks of 100 with one stimulus presented in each
+- semantic judgement 1:24 living, 25:48 nonliving, 49:72 SAME STIMULI living, 73:96 SAME STIMULI nonliving, in 10 blocks of 96: visual semantic 1:3, auditory semantic 1:3, visual control 1:2, auditory control 1:2
 
 ## Optional steps:
 - Use `plot_electrode_locations.m` to visualise electrodes on the brain for the whole participant group.

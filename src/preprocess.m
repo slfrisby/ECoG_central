@@ -13,9 +13,9 @@ function preprocess(p)
     % eeglab should have the cleanline and SASICA plugins installed. To 
     % adapt SASICA for ECoG, open eeg_SASICA.m and comment out lines 148-150
     % and 711-818.
-    addpath([root,'/dependencies/eeglab']);
-    addpath([root,'/dependencies/cleanline']);
-    addpath(genpath([root,'/dependencies/ECoG_Data_Prep']));
+    addpath([root,'/dependencies/']);
+    addpath(genpath([root,'/dependencies/eeglab']));
+    addpath(genpath([root,'/dependencies/cleanline']));
     cd(root);
  
     % make work directory
@@ -57,17 +57,15 @@ function preprocess(p)
         for s = 1:length(structs2load)
     
             % EEGlab opens a GUI on startup. However, on the compute nodes of the high-performance
-            % cluster it is not possible to open a GUI.
-            eeglab nogui
+            % cluster it is not possible to open a GUI. Instead, initialise
+            % an empty eeglab structure
+            load([root,'/src/eeglab_init.mat']);
             % populate the EEG structure
             EEG.setname = ['sub-',p];
             EEG.nbchan = size(data.(structs2load{s}).DATA,2);
             EEG.data = data.(structs2load{s}).DATA';
             EEG.srate = json.SamplingFrequency; 
             EEG.subject = ['sub-',p];
-            EEG.icawinv = [];
-            EEG.icaweights = [];
-            EEG.icasphere = [];
             % ...and use the toolbox's built-in function to check that the
             % structures are set up correctly.
             EEG = eeg_checkset(EEG); 
@@ -128,141 +126,139 @@ function preprocess(p)
             % important info that Chris's scripts need are saved where they need to be.
             tmp = EEG.data';
             data.(structs2load{s}).DATA = tmp;
-    
         end
-    end
+    
         
-    % Save and clear
-    save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_filtered.mat'],'-struct', 'data', '-v7.3')
-    clearvars -except root p json task
-    
+        % Save and clear
+        save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_filtered.mat'],'-struct', 'data', '-v7.3')
+        clearvars -except p root dataFiles task json d
+        
     %% STEP 2 - Downsample, epoch (into one big epoch, rather than many little windows), reject bad channels, and baseline-correct
+    
+        % These are achieved using scripts based on Chris Cox's function setup_data.
+    
+        % make input files if necessary
+        if ~exist([root,'/work/details_for_setup_data/'])
+            specify_setup_data_details;
+        end
+    
+        % Parameters:
+    
+        % WindowStart and WindowSize
+        % We wish to generate one big window per trial (rather than a moving 
+        % or opening window). The window of interest for later analysis is 
+        % 0:1650 ms (where 0 is stimulus onset) but we need a buffer so 
+        % that any edge artefacts lie outside the window of interest. We 
+        % also want to avoid overlap because we want to run ICA later. We 
+        % therefore select -1000:3000 ms.
+    
+        % BaselineWindow
+        % This is set to match the voltage analysis of the same data. It is
+        % not perfect because the previous stimulus was still onscreen.
+        % Additionally, some advise the use of a baseline that stops well
+        % before stimulus onset to avoid bleeding of activity into the
+        % pretrial period. However, it is important that these results are
+        % comparable with previous work, so we select a baseline of -200 ms
+        % until stimulus onset.
+    
+        % subjects
+        % We wish to proces one dataset at a time. 
+    
+        % boxcar
+        % This defines the number of MILISECONDS over which the data is
+        % averaged. For example, if the data were sampled at 2000 Hz and we 
+        % had the following timeseries:
+        % [2, 4, 6, 8];
+        % A boxcar average of 1 ms would down-sample to 1000 Hz and yield:
+        % [3, 7];
+        % Note that, because this parameter is defined in miliseconds
+        % rather than in data points, the effect depends on the sampling
+        % rate. We set boxcar = 1 so that data collected at 2000 Hz will be
+        % downsampled to match data collected at 1000 Hz (which will be
+        % unaffected).
+    
+        % slope_interval
+        % If slope interval > 0, results describe rate of change in voltage rather
+        % than voltage value.
+    
+        % average
+        % 'False' means that data from all 4 presentations of the same
+        % stimulus will not be averaged at this stage.
+    
+        % datacode
+        % Chris's data have a suffix '_raw' or '_ref'.
+    
+        % dataroot
+        % The data are found in the work directory for each participant.
+    
+        % metaroot
+        % This points the script towards important metadata.
+    
+        % datarootout
+        % We wish to output the data to the work folder for each
+        % participant.
+    
+        % cvpath
+        % This points the script towards cross-validation schemes that are
+        % stored as part of the metadata (though not used later on).
+    
+        % overwrite
+        % 1 for true.
+        
+        if strcmp(task,'naming')
+            setup_naming_data( ...
+            'WindowStart', -1000, ... 
+            'WindowSize', 4000, ...
+            'BaselineWindow', 200, ...
+            'subjects', str2num(p), ...
+            'boxcar', 1, ...
+            'slope_interval', 0, ...
+            'average', 0, ...
+            'datacode', '', ...
+            'dataroot', [root,'/work/sub-',p], ...
+            'metaroot', [root,'/work/details_for_setup_data/'], ...
+            'datarootout', [root,'/work/sub-',p], ...
+            'overwrite', 1);
+    
+        elseif strcmp(task,'semanticjudgement')
+            setup_semantic_judgement_data( ...
+            'WindowStart', -1000, ... 
+            'WindowSize', 4000, ...
+            'BaselineWindow', 200, ...
+            'subjects', str2num(p), ...
+            'boxcar', 1, ...
+            'slope_interval', 0, ...
+            'average', 0, ...
+            'datacode', '', ...
+            'dataroot', [root,'/work/sub-',p], ...
+            'metaroot', [root,'/work/details_for_setup_data/'], ...
+            'datarootout', [root,'/work/sub-',p], ...
+            'overwrite', 1);
+        end
+    
+        % Reformat the data so that it can be loaded back into EEGlab
+        data = load([root,'/work/sub-',p,'/',task,'/full/BoxCar/001/WindowStart/-1000/WindowSize/4000/s',p,'_.mat']);
+    
+        disp(['Organising data for subject ',p,' ...']);
+    
+        % find the number of electrodes (the second dimension is spatiotemporal
+        % features - value for each timepoint for electrode 1, followed by 
+        % data for each timepoint for electrode 2, etc.)
+        nElecs = size(data.X,2)/4000;
+    
+        % reshape into a matrix of trials x time x electrodes. 
+        data = reshape(data.X,[],4000,nElecs);
+        % Then permute into the format electrodes x time x trials. This is 
+        % not Cox format (i.e. decoding format) - that formatting will be done
+        % after visual inspection.
+        data = permute(data,[3 2 1]);
+    
+        % save and clear
+        save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_epoched.mat'],'data','-v7.3');
+        disp('Done organising!')
+        clearvars -except p root dataFiles json d
 
-    % These are achieved using scripts based on Chris Cox's function setup_data.
-
-    % make input files if necessary
-    if ~exist([root,'/work/details_for_setup_data/'])
-        specify_setup_data_details;
     end
-
-    % Parameters:
-
-    % WindowStart and WindowSize
-    % We wish to generate one big window per trial (rather than a moving 
-    % or opening window). The window of interest for later analysis is 
-    % 0:1650 ms (where 0 is stimulus onset) but we need a buffer so 
-    % that any edge artefacts lie outside the window of interest. We 
-    % also want to avoid overlap because we want to run ICA later. We 
-    % therefore select -1000:3000 ms.
-
-    % BaselineWindow
-    % This is set to match the voltage analysis of the same data. It is
-    % not perfect because the previous stimulus was still onscreen.
-    % Additionally, some advise the use of a baseline that stops well
-    % before stimulus onset to avoid bleeding of activity into the
-    % pretrial period. However, it is important that these results are
-    % comparable with previous work, so we select a baseline of -200 ms
-    % until stimulus onset.
-
-    % subjects
-    % We wish to proces one dataset at a time. 
-
-    % boxcar
-    % This defines the number of MILISECONDS over which the data is
-    % averaged. For example, if the data were sampled at 2000 Hz and we 
-    % had the following timeseries:
-    % [2, 4, 6, 8];
-    % A boxcar average of 1 ms would down-sample to 1000 Hz and yield:
-    % [3, 7];
-    % Note that, because this parameter is defined in miliseconds
-    % rather than in data points, the effect depends on the sampling
-    % rate. We set boxcar = 1 so that data collected at 2000 Hz will be
-    % downsampled to match data collected at 1000 Hz (which will be
-    % unaffected).
-
-    % slope_interval
-    % If slope interval > 0, results describe rate of change in voltage rather
-    % than voltage value.
-
-    % average
-    % 'False' means that data from all 4 presentations of the same
-    % stimulus will not be averaged at this stage.
-
-    % datacode
-    % Chris's data have a suffix '_raw' or '_ref'.
-
-    % dataroot
-    % The data are found in the work directory for each participant.
-
-    % metaroot
-    % This points the script towards important metadata.
-
-    % datarootout
-    % We wish to output the data to the work folder for each
-    % participant.
-
-    % cvpath
-    % This points the script towards cross-validation schemes that are
-    % stored as part of the metadata (though not used later on).
-
-    % overwrite
-    % 1 for true.
-    
-    if strcmp(task,'naming')
-        setup_naming_data( ...
-        'WindowStart', -1000, ... 
-        'WindowSize', 4000, ...
-        'BaselineWindow', 200, ...
-        'subjects', str2num(p), ...
-        'boxcar', 1, ...
-        'slope_interval', 0, ...
-        'average', 0, ...
-        'datacode', '', ...
-        'dataroot', [root,'/work/sub-',p], ...
-        'metaroot', [root,'/work/details_for_setup_data/'], ...
-        'datarootout', [root,'/work/sub-',p], ...
-        'overwrite', 1);
-
-    elseif strcmp(task,'semanticjudgement')
-        setup_semantic_judgement_data( ...
-        'WindowStart', -1000, ... 
-        'WindowSize', 4000, ...
-        'BaselineWindow', 200, ...
-        'subjects', str2num(p), ...
-        'boxcar', 1, ...
-        'slope_interval', 0, ...
-        'average', 0, ...
-        'datacode', '', ...
-        'dataroot', [root,'/work/sub-',p], ...
-        'metaroot', [root,'/work/details_for_setup_data/'], ...
-        'datarootout', [root,'/work/sub-',p], ...
-        'overwrite', 1);
-
-    end
-
-    %%%%%%%%%%%%
-    
-    % Reformat the data so that it can be loaded back into EEGlab
-    
-    data = load([root,'/work/sub-',p,'/full/BoxCar/001/WindowStart/-1000/WindowSize/4000/s',p,'_.mat']);
-    
-    disp(['Organising data for subject ',p,' ...']);
-
-    % find the number of electrodes (the second dimension is spatiotemporal
-    % features - value for each timepoint for electrode 1, followed by 
-    % data for each timepoint for electrode 2, etc.)
-    nelecs = size(data.X,2)/4000;
-
-    % reshape into a matrix of trials x time x electrodes
-    X = reshape(data.X,400,4000,nelecs);
-    % permute into the format electrodes x time x trials (data are not in perfect Cox
-    % format at this point)
-    X = permute(X,[3 2 1]);
-
-    % save and clear
-    save([root,'/work/sub-',p,'/data_reformat.mat'],'X','-v7.3');
-    disp('Done organising!')
-    clearvars -except jsonfile p root
 
 end
 
