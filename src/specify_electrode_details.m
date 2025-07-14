@@ -2,7 +2,7 @@
 % for creating electrodes.tsv .
 
 electrodeDetails(1).Subject = '01';
-electrodeDetails(1).Hemisphere = 'L';
+electrodeDetails(1).Hemisphere = {};
 
 electrodeDetails(2).Subject = '02';
 electrodeDetails(2).Hemisphere = 'L';
