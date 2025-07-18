@@ -13,8 +13,8 @@ channelDetails(1).Subject = '01';
 channelDetails(1).Task = 'naming';
 channelDetails(1).NotECoG = {'DC09';'DC10';'DC11';'EOG'};
 channelDetails(1).NotECoGType = {'TRIG';'TRIG';'TRIG';'EOG'};
-channelDetails(1).BadElectrode = {'A06';'A11';'B04';'C04';'D01'};
-channelDetails(1).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone';'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+channelDetails(1).BadElectrode = {'A06';'A11';'B04';'B13';'B14';'C03';'C04';'D01'};
+channelDetails(1).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone';'seizure onset zone'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'seizure onset zone'; 'seizure onset zone'};
 
 channelDetails(2).Subject = '02';
 channelDetails(2).Task ='naming';
@@ -41,8 +41,8 @@ channelDetails(5).Subject = '05';
 channelDetails(5).Task = 'naming';
 channelDetails(5).NotECoG = {'REF01';'REF02';'REF03';'REF04';'DC01';'DC02';'MIC'};
 channelDetails(5).NotECoGType = {'REF';'REF';'REF';'REF';'TRIG';'TRIG';'MISC'};
-channelDetails(5).BadElectrode = {'A01';'A02';'A06';'A07'};
-channelDetails(5).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+channelDetails(5).BadElectrode = {'A01';'A02';'A06';'A07';'C01'};
+channelDetails(5).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'};
 
 channelDetails(6).Subject = '06';
 channelDetails(6).Task = 'naming';
@@ -76,8 +76,8 @@ channelDetails(10).Subject = '10';
 channelDetails(10).Task = 'naming';
 channelDetails(10).NotECoG = {'REF01';'REF02';'REF03';'REF04';'REF05';'REF06';'RDEL';'RQF';'EKG';'DC01';'DC02';'DC03'};
 channelDetails(10).NotECoGType = {'REF';'REF';'REF';'REF';'REF';'REF';'MISC';'MISC';'ECG';'TRIG';'TRIG';'TRIG'};
-channelDetails(10).BadElectrode = {'B05';'B06';'B07';'B13';'B14';'B15';'B16';'C01';'C05';'C06';'C11';'C12';'C16';'C17'};
-channelDetails(10).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+channelDetails(10).BadElectrode = {'B05';'B06';'B07';'B13';'B14';'B15';'B16';'C01';'C05';'C06';'C07';'C09';'C11';'C12';'C16';'C17';'D04';'D06'};
+channelDetails(10).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'bad electrode'; 'bad electrode'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'; 'bad electrode'};
 
 channelDetails(11).Subject = '11'; 
 channelDetails(11).Task = 'naming';
@@ -90,8 +90,8 @@ channelDetails(12).Subject = '12';
 channelDetails(12).Task = 'naming';
 channelDetails(12).NotECoG = {'REF01';'REF02';'REF03';'REF04';'REF05';'REF06';'DC01';'DC03';'DC04'};
 channelDetails(12).NotECoGType = {'REF';'REF';'REF';'REF';'REF';'REF';'TRIG';'TRIG';'TRIG'};
-channelDetails(12).BadElectrode = {'C06';'C11'};
-channelDetails(12).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'};
+channelDetails(12).BadElectrode = {'C06';'C11';'F01';'G17'};
+channelDetails(12).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'bad electrode'; 'bad electrode'};
 
 channelDetails(13).Subject = '13';
 channelDetails(13).Task = 'naming';
@@ -153,8 +153,8 @@ channelDetails(20).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizu
 
 channelDetails(21).Subject = '10';
 channelDetails(21).Task = 'semanticjudgement';
-channelDetails(21).NotECoG = {'REF01';'REF02';'REF03';'REF04';'REF05';'REF06';'EKG';'DC01';'DC02';'DC03'};
-channelDetails(21).NotECoGType = {'REF';'REF';'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG'};
+channelDetails(21).NotECoG = {'REF01';'REF02';'REF03';'REF04';'REF05';'REF06';'EKG';'DC01';'DC02';'DC03';'DC04'};
+channelDetails(21).NotECoGType = {'REF';'REF';'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG';'TRIG'};
 channelDetails(21).BadElectrode = {'B05';'B06';'B07';'B13';'B14';'B15';'B16';'C01';'C05';'C06';'C11';'C12';'C16';'C17'};
 channelDetails(21).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
 

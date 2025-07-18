@@ -4,8 +4,11 @@ function preprocess(p)
     % (filtering, downsampling, epoching, baseline correction, channel
     % rejection). This function is suitable for deployment to the CBU
     % cluster. It should be followed by the manual section of the
-    % preprocessing pipeline (inspect_data.m), which cannot be run on the
+    % preprocessing pipeline (reject_artefacts.m), which cannot be run on the
     % compute nodes of the cluster. 
+
+    % Arguments
+    % - p: subject ID (character vector)
 
     % setup
     root = '/group/mlr-lab/Saskia/ECoG_central';
