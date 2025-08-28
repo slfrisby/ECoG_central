@@ -139,8 +139,8 @@ channelDetails(19).Subject = '22';
 channelDetails(19).Task = 'naming';
 channelDetails(19).NotECoG = {'A01';'A02';'A03';'A04';'A05';'A06';'A07';'A08';'A09';'A10';'A11';'A12';'B01';'B02';'B03';'B04';'B05';'B06';'B07';'B08';'B09';'B10';'B11';'B12';'C01';'C02';'C03';'C04';'C05';'C06';'C07';'C08';'C09';'C10';'C11';'C12';'REF01';'REF02';'REF03';'REF04';'DC01';'DC02';'DC03';'DC04';'EKG';'VEOG';'HEOG';'VEOG1';'VEOG2';'HEOG1';'HEOG2'};
 channelDetails(19).NotECoGType = {'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'REF';'REF';'REF';'REF';'TRIG';'TRIG';'TRIG';'TRIG';'ECG';'EOG';'EOG';'EOG';'EOG';'EOG';'EOG'};
-channelDetails(19).BadElectrode = {'A02';'A03';'A04';'D01';'E01'};
-channelDetails(19).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+channelDetails(19).BadElectrode = {'A02';'A03';'A04';'D01';'E01';'E11';'E12';'H18';'I01';'I02';'I03';'I04';'I05';'I09';'I10';'I11';'I12';'I13'};
+channelDetails(19).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'; 'bad electrode'};
 
 % the next 8 fields are semantic judgement
 
@@ -190,8 +190,8 @@ channelDetails(26).Subject = '17';
 channelDetails(26).Task = 'semanticjudgement';
 channelDetails(26).NotECoG = {'REF01';'REF02';'REF03';'REF04';'REF05';'REF06';'EKG';'DC01';'DC02';'DC03'};
 channelDetails(26).NotECoGType = {'REF';'REF';'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG'};
-channelDetails(26).BadElectrode = {'A12';'B02';'B04';'C04';'C05';'C06';'C10';'C11';'C12';'C13';'C14';'C15';'D09';'D12';'D13';'D14';'E03';'E04';'E05';'E08';'E09';'E12';'E13';'E14';'E15';'E16';'E17';'E18';'E19';'F01';'F04';'F05';'F09';'G04';'G05';'G08';'G20'};
-channelDetails(26).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+channelDetails(26).BadElectrode = {'A12';'B02';'B04';'C04';'C05';'C06';'C10';'C11';'C12';'C13';'C14';'C15';'D09';'D12';'D13';'D14';'E03';'E04';'E05';'E08';'E09';'E12';'E13';'E14';'E15';'E16';'E17';'E18';'E19';'F01';'F04';'F05';'F09';'G04';'G05';'G06';'G08';'G20'};
+channelDetails(26).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'; 'seizure onset zone'; 'seizure onset zone'};
 
 channelDetails(27).Subject = '21';
 channelDetails(27).Task = 'semanticjudgement';

@@ -23,10 +23,7 @@ badTrials(3).BadElectrodeStatusDescription = {'seizure onset zone'; 'overlaps an
 
 badTrials(4).Subject = '04';
 badTrials(4).Task = 'naming';
-badTrials(4).NotECoG = {'REF01';'REF02';'REF03';'REF04';'REF05';'REF06';'DC01';'DC02';'DC03'};
-badTrials(4).NotECoGType = {'REF';'REF';'REF';'REF';'REF';'REF';'TRIG';'TRIG';'TRIG'};
-badTrials(4).BadElectrode = {'B01';'B06';'B11'; 'C06'};
-badTrials(4).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'overlaps another grid - no contact with brain'};
+badTrials(4).BadTrials = [6;8;14;18;22;23;37;39;48;51;54;55;58;65;74;75;80;81;93;96;101;109;113;117;141;143;148;149;160;167;177;179;184;186;205;207;209;217;228;236;238;241;245;251;257;259;268;273;281;282;285;296;299;302;305;318;324;337;341;345;347;350;354;364;378;388;391];
 
 badTrials(5).Subject = '05';
 badTrials(5).Task = 'naming';
@@ -38,17 +35,11 @@ badTrials(6).BadTrials = [13;28;41;45;52;58;65;69;83;91;94;99;101;108;118;119;12
 
 badTrials(7).Subject = '07';
 badTrials(7).Task = 'naming';
-badTrials(7).NotECoG = {'A01';'A02';'A03';'A04';'B01';'B02';'B03';'B04';'C01';'C02';'C03';'C04';'D01';'D02';'D03';'D04';'MIC';'DC01';'DC02';'REF01';'REF02';'REF03';'REF04'};
-badTrials(7).NotECoGType = {'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'MISC';'TRIG';'TRIG';'REF';'REF';'REF';'REF'};
-badTrials(7).BadElectrode = {'I01';'I06';'I11'};
-badTrials(7).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(7).BadTrials = [19;22;35;38;39;45;55;64;65;67;72;75;76;77;78;80;90;94;103;105;110;112;113;117;118;127;131;138;158;159;161;168;170;171;176;179;180;181;182;184;187;188;189;195;196;201;202;203;204;205;207;210;211;220;221;228;229;232;233;234;235;237;239;240;247;249;253;257;258;259;260;269;270;272;273;274;275;277;279;282;283;284;286;288;299;302;305;307;309;311;312;313;314;315;317;318;319;321;323;325;327;328;329;330;333;334;335;336;337;338;339;340;342;344;345;346;347;349;350;351;353;354;355;356;358;359;360;363;364;369;372;373;374;375;377;378;379;381;384;385;390;392;395];
 
 badTrials(8).Subject = '08';
 badTrials(8).Task = 'naming';
-badTrials(8).NotECoG = {'A01';'A02';'A03';'A04';'A05';'A06';'B01';'B02';'B03';'B04';'B05';'B06';'C01';'C02';'C03';'C04';'C05';'C06';'REF01';'REF02';'REF03';'REF04';'DC08';'DC09';'DC10'};
-badTrials(8).NotECoGType = {'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'REF';'REF';'REF';'REF';'TRIG';'TRIG';'TRIG'};
-badTrials(8).BadElectrode = {'E01';'E02';'E03'};
-badTrials(8).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(8).BadTrials = [1;8;10;12;13;14;16;18;19;20;21;22;25;26;27;29;30;34;35;36;37;39;41;43;44;48;51;54;57;58;62;64;65;66;68;70;71;73;74;75;77;80;81;82;83;84;87;89;91;93;94;95;97;98;104;105;107;108;109;112;114;115;116;117;118;119;120;127;128;129;130;131;132;133;134;135;136;139;141;145;146;147;148;152;153;156;157;158;159;160;161;162;164;166;167;169;170;171;172;173;174;175;177;181;182;184;186;187;188;189;190;191;192;193;194;196;197;198;200;201;203;205;207;208;209;210;211;214;216;218;220;221;222;224;227;230;231;232;233;234;236;238;239;240;242;244;245;246;247;248;249;250;251;253;254;255;257;258;260;261;263;265;267;268;273;274;276;278;279;280;281;282;283;284;285;288;289;291;292;293;294;296;297;299;301;302;303;304;305;306;307;309;310;312;315;316;318;319;320;321;323;326;327;328;329;330;331;332;333;334;336;337;338;339;341;342;343;344;346;347;347;349;350;352;353;354;355;356;357;358;359;361;362;363;364;365;366;367;368;369;370;371;373;375;379;381;382;383;384;385;386;388;389;390;393;395;396;397;398;399;400];
 
 badTrials(9).Subject = '09';
 badTrials(9).Task = 'naming';
@@ -90,10 +81,7 @@ badTrials(14).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure on
 
 badTrials(15).Subject = '15';
 badTrials(15).Task = 'naming';
-badTrials(15).NotECoG = {'REF01';'REF02';'REF03';'REF04';'EKG1';'DC01';'DC02';'DC03'};
-badTrials(15).NotECoGType = {'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG'};
-badTrials(15).BadElectrode = {'D01'};
-badTrials(15).BadElectrodeStatusDescription = {'seizure onset zone'};
+badTrials(15).BadTrials = [6;7;9;11;18;21;22;25;28;36;38;49;54;61;63;81;86;88;97;109;118;121;122;128;133;135;136;137;138;139;142;159;162;169;170;182;192;194;197;198;202;208;213;214;228;229;230;231;233;239;241;247;250;255;261;273;274;275;276;280;287;288;298;305;307;308;309;312;320;324;325;326;328;347;359;373;375;378;386;391;394;397];
 
 badTrials(16).Subject = '17';
 badTrials(16).Task = 'naming';

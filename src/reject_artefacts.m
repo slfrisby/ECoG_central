@@ -1,7 +1,9 @@
 function reject_artefacts(p)  
 
-    % conduct artefact rejection. This script is not suitable for deployment to
-    % the CBU cluster.
+    % conduct artefact rejection. This script should be run step-by-step
+    % locally, and you should inspect the data and edit specify_bad_trials
+    % to your satisfaction. The script can then be deployed to the CBU
+    % cluster so that the ICA completes faster.
 
     % Arguments
     % - p: subject ID (character vector)
@@ -18,6 +20,7 @@ function reject_artefacts(p)
     cd(root);
     
     %% TODO: specify bad trials
+    %% TODO: make sure that the right trials are rejected from the right dataset (naming/SJ) - dir does not always return files in the same order
 
     % get epoched data - naming and (if available) semantic judgement
     dataFiles = dir([root,'/work/sub-',p,'/*_epoched.mat']);
@@ -62,8 +65,8 @@ function reject_artefacts(p)
             % get data and calculate the mean and standard deviation for that
             % channel
             channelData = squeeze(EEG.data(c,:,:));
-            m = mean(channelData,'all');
-            s = std(channelData,0,'all');
+            m = mean(channelData,'all','omitnan');
+            s = std(channelData,0,'all','omitnan');
 
             % find the indices of the trials where there are spikes over 10
             % standard deviations above or below the mean
