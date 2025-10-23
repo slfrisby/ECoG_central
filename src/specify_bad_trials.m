@@ -11,15 +11,9 @@ badTrials(2).Subject = '02';
 badTrials(2).Task ='naming';
 badTrials(2).BadTrials = [6;11;12;16;17;19;20;24;28;30;38;39;48;49;51;52;56;57;63;64;70;71;75;76;79;80;82;83;88;93;96;97;104;107;111;113;117;122;123;126;127;128;132;145;146;147;152;156;164;175;186;187;189;199;201;208;216;223;224;225;228;235;233;238;239;245;246;247;248;250;260;261;262;266;268;269;270;275;279;286;288;289;292;296;305;307;308;312;313;320;322;323;325;329;332;336;339;340;341;344;345;347;348;349;350;354;355;359;364;366;369;371;372;373;374;375;376;377;379;380;387;388;390;391;395;398];
 
-
-
-
 badTrials(3).Subject = '03';
 badTrials(3).Task = 'naming';
-badTrials(3).NotECoG = {'EOG';'DC01';'DC02';'DC03'};
-badTrials(3).NotECoGType = {'EOG';'TRIG';'TRIG';'TRIG'};
-badTrials(3).BadElectrode = {'B01';'B05';'B10';'B15';'B20';'C03';'C04';'C05';'D03';'D04';'D07';'D12';'D19';};
-badTrials(3).BadElectrodeStatusDescription = {'seizure onset zone'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'overlaps another grid - no contact with brain'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(3).BadTrials = [30;38;47;54;57;73;81;103;117;120;121;127;130;147;152;165;166;202;227;234;255;261;266;269;285;290;313;330;342;345;346;347;358;365;366;379;400];
 
 badTrials(4).Subject = '04';
 badTrials(4).Task = 'naming';
@@ -67,10 +61,7 @@ badTrials(12).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure on
 
 badTrials(13).Subject = '13';
 badTrials(13).Task = 'naming';
-badTrials(13).NotECoG = {'REFA01';'REFA02';'REFA03';'REFA04';'RDEL';'EKG';'DC04';'DC05';'DC06';'DC07';'DC08'};
-badTrials(13).NotECoGType = {'REF';'REF';'REF';'REF';'MISC';'ECG';'TRIG';'TRIG';'TRIG';'TRIG';'TRIG'};
-badTrials(13).BadElectrode = {'A01';'B01';'B02';'D01';'D02';'E01';'E02';};
-badTrials(13).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(13).BadTrials = [2;4;11;12;19;26;28;29;32;36;42;45;54;56;63;64;65;66;70;77;82;86;87;88;92;93;99;102;105;106;116;122;133;138;141;149;150;153;154;156;165;167;168;172;174;177;182;187;191;192;195;197;200;201;202;203;205;207;209;217;218;219;224;227;238;239;243;250;252;253;259;266;273;276;280;282;289;290;303;304;306;307;308;309;313;314;325;326;329;332;333;335;339;351;352;356;359;361;367;372;373;376;378;379;386;389;400];
 
 badTrials(14).Subject = '14';
 badTrials(14).Task = 'naming';
@@ -90,10 +81,7 @@ badTrials(16).BadTrials = [2;3;5;6;7;8;9;10;11;12;13;14;15;16;17;18;19;20;21;23;
 
 badTrials(17).Subject = '20';
 badTrials(17).Task = 'naming';
-badTrials(17).NotECoG = {'DC01';'DC02';'DC03';'DC04';'EKG'};
-badTrials(17).NotECoGType = {'TRIG';'TRIG';'TRIG';'TRIG';'ECG'};
-badTrials(17).BadElectrode = {'E09';'E13';'E14';'E18';'F03';'F04'};
-badTrials(17).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(17).BadTrials = [1;3;4;5;6;7;11;12;13;14;15;16;17;22;23;27;28;29;30;35;36;37;40;43;51;52;54;57;58;61;62;66;67;71;72;77;79;81;82;88;89;92;94;97;102;103;105;106;107;108;112;114;115;116;117;122;123;126;128;129;130;131;132;133;137;138;141;142;143;145;147;150;151;152;153;154;157;159;164;166;167;168;169;170;173;174;175;177;180;182;183;185;191;192;197;200;201;202;203;204;205;206;207;208;209;210;211;212;213;214;215;216;218;219;220;221;222;223;224;225;226;227;228;229;230;231;232;233;234;235;236;237;238;239;240;241;242;243;244;245;246;247;248;249;250;251;252;253;254;255;257;258;259;260;261;262;263;264;265;266;267;268;269;270;271;272;273;274;275;276;277;278;279;280;281;282;283;284;285;286;287;288;289;290;292;293;294;296;297;298;299;300;301;302;303;304;305;306;307;308;309;311;312;313;314;315;316;317;318;319;320;321;322;323;324;325;326;327;328;329;330;331;332;333;334;335;336;337;339;340;341;342;343;344;345;346;347;348;349;350;351;352;353;355;356;357;358;359;360;361;362;363;364;365;366;367;368;369;370;371;373;374;375;376;377;378;379;380;381;382;383;384;385;386;387;388;389;390;391;392;393;394;395;396;397;398;399;400];
 
 badTrials(18).Subject = '21';
 badTrials(18).Task = 'naming';
@@ -104,10 +92,7 @@ badTrials(18).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure on
 
 badTrials(19).Subject = '22';
 badTrials(19).Task = 'naming';
-badTrials(19).NotECoG = {'A01';'A02';'A03';'A04';'A05';'A06';'A07';'A08';'A09';'A10';'A11';'A12';'B01';'B02';'B03';'B04';'B05';'B06';'B07';'B08';'B09';'B10';'B11';'B12';'C01';'C02';'C03';'C04';'C05';'C06';'C07';'C08';'C09';'C10';'C11';'C12';'REF01';'REF02';'REF03';'REF04';'DC01';'DC02';'DC03';'DC04';'EKG';'VEOG';'HEOG';'VEOG1';'VEOG2';'HEOG1';'HEOG2'};
-badTrials(19).NotECoGType = {'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'SEEG';'REF';'REF';'REF';'REF';'TRIG';'TRIG';'TRIG';'TRIG';'ECG';'EOG';'EOG';'EOG';'EOG';'EOG';'EOG'};
-badTrials(19).BadElectrode = {'A02';'A03';'A04';'D01';'E01'};
-badTrials(19).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(19).BadTrials = [3;4;5;6;8;9;10;13;14;15;16;21;23;25;26;27;29;30;31;34;36;41;44;45;46;47;48;52;55;56;62;64;65;66;67;68;69;72;73;74;75;76;78;79;81;82;83;84;85;90;98;99;100;104;105;108;109;110;115;116;119;122;125;126;127;130;131;132;136;137;138;140;141;145;149;155;162;165;166;167;170;173;175;176;178;182;183;185;187;188;189;190;191;193;194;195;199;200;202;203;204;205;207;211;212;214;215;218;219;225;227;228;229;231;233;235;236;241;242;244;246;248;251;252;253;254;255;257;258;259;261;265;271;272;274;277;279;282;283;284;285;289;290;291;293;294;297;298;300;304;306;314;316;317;318;320;322;323;325;326;328;330;331;332;333;335;336;337;338;341;346;347;348;349;351;354;355;356;360;363;365;372;373;375;376;378;379;380;381;383;384;385;387;388;389;392;393;394;395;397;399;400];
 
 % the next 8 fields are semantic judgement
 
