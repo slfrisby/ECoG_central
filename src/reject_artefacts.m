@@ -37,7 +37,7 @@ function reject_artefacts(p)
         EEG.srate = 1000; % data collected at 2000 Hz have now been downsampled to 1000 Hz
         EEG.subject = ['sub-',p];
         EEG = eeg_checkset(EEG);
-        eeglab redraw
+        % eeglab redraw
 
         % create a filter
         trialFilter = ones(size(data,3),1);

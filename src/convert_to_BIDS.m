@@ -42,7 +42,7 @@ patients = patients([patients.isdir]);
 patients = patients(~ismember({patients.name},{'.','..'}));
 
 % for each patient
-for q = 18%1 :length(patients)
+for q = 11%:length(patients)
 
     % get that patient's ID number
     tmp = regexp(patients(q).name,'\d+','match');
