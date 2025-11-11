@@ -83,7 +83,7 @@ channelDetails(11).Subject = '11';
 channelDetails(11).Task = 'naming';
 channelDetails(11).NotECoG = {'REF01';'REF02';'REF03';'REF04';'EKG';'DC01';'DC03';'DC04';'RDEL';'RQF'};
 channelDetails(11).NotECoGType = {'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG';'MISC';'MISC'};
-channelDetails(11).BadElectrode = {'B01';'C01';'C02';'C03';'C06';'C07';'C11';'G11'};
+channelDetails(11).BadElectrode = {'B01';'C01';'C02';'C03';'C06';'C07';'C11';'G12'};
 channelDetails(11).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'};
 
 channelDetails(12).Subject = '12';

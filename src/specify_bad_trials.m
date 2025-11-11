@@ -47,7 +47,7 @@ badTrials(11).Subject = '11';
 badTrials(11).Task = 'naming';
 badTrials(11).NotECoG = {'REF01';'REF02';'REF03';'REF04';'EKG';'DC01';'DC03';'DC04';'RDEL';'RQF'};
 badTrials(11).NotECoGType = {'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG';'MISC';'MISC'};
-badTrials(11).BadElectrode = {'B01';'C01';'C02';'C03';'C06';'C07';'C11'};
+badTrials(11).BadElectrode = {'B01';'C01';'C02';'C03';'C06';'C07';'G12'};
 badTrials(11).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
 
 badTrials(12).Subject = '12';
@@ -60,10 +60,7 @@ badTrials(13).BadTrials = [2;4;11;12;19;26;28;29;32;36;42;45;54;56;63;64;65;66;7
 
 badTrials(14).Subject = '14';
 badTrials(14).Task = 'naming';
-badTrials(14).NotECoG = {'REF01';'REF02';'REF03';'REF04';'EKG';'DC01';'DC02';'DC03';'DC04'};
-badTrials(14).NotECoGType = {'REF';'REF';'REF';'REF';'ECG';'TRIG';'TRIG';'TRIG';'TRIG'};
-badTrials(14).BadElectrode = {'A01';'A02';'A03';'B01';'B02'};
-badTrials(14).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+badTrials(14).BadTrials = [1;5;6;9;12;14;15;16;17;20;23;24;25;26;28;33;35;37;39;40;41;42;43;44;47;52;58;60;61;63;64;65;66;67;69;72;73;74;75;83;85;86;87;88;90;91;92;95;96;97;100;102;103;106;107;110;115;116;117;122;123;125;126;127;128;129;141;144;147;148;149;150;152;154;156;157;160;161;162;163;164;169;170;171;172;173;174;175;177;181;182;187;188;189;191;196;199;202;205;206;207;208;209;210;212;214;216;218;219;220;221;224;227;228;229;230;231;235;236;238;239;241;242;243;244;245;246;253;254;258;261;263;268;271;272;274;275;276;277;285;288;293;295;296;299;301;302;305;307;308;309;310;312;315;318;320;321;323;324;325;329;330;332;333;334;335;336;337;338;339;341;342;344;345;347;349;350;354;355;361;362;363;365;366;368;369;370;371;375;376;377;379;380;381;385;388;392;393;395;396;397;399];
 
 badTrials(15).Subject = '15';
 badTrials(15).Task = 'naming';
