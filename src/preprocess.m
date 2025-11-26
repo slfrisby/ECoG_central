@@ -134,7 +134,6 @@ function preprocess(p)
         
         % Save and clear
         save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_filtered.mat'],'-struct', 'data', '-v7.3')
-        clearvars -except p root task
         
     %% STEP 2 - Downsample, epoch (into one big epoch, rather than many little windows), reject bad channels, and baseline-correct
     
@@ -259,7 +258,6 @@ function preprocess(p)
         % save and clear
         save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_epoched.mat'],'data','-v7.3');
         disp('Done organising!')
-        clearvars
 
     end
 
