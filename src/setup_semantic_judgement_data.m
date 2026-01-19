@@ -103,7 +103,7 @@ function setup_semantic_judgement_data(varargin)
     filelist(4).filename = 'sub-13_task-semanticjudgement_filtered.mat'; 
     filelist(4).variables = {'SemJudgeERP_Pt13_ANONY'};
     filelist(4).sessions = {1:10};
-    filelist(4).sessiontag = {'ss01_vis01','ss04_vis02','ss10_vis03','ss02_aud01','ss03_aud02','ss09_aud03','ss05_vis_ctrl01','ss08_vis_ctrl02','ss06_aud_ctrl01','ss07_aud_ctrl02'};
+    filelist(4).sessiontag = {'ss01_vis_01','ss04_vis_02','ss10_vis_ss03','ss02_aud_01','ss03_aud_02','ss09_aud_ss03','ss05_vis_ctrl01','ss08_vis_ctrl02','ss06_aud_ctrl01','ss07_aud_ctrl02'};
 
     filelist(5).subject = 14;
     filelist(5).filename = 'sub-14_task-semanticjudgement_filtered.mat'; 

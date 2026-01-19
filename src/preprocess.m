@@ -130,9 +130,8 @@ function preprocess(p)
             tmp = EEG.data';
             data.(structs2load{s}).DATA = tmp;
         end
-    
-        
-        % Save and clear
+     
+        % Save 
         save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_filtered.mat'],'-struct', 'data', '-v7.3')
         
     %% STEP 2 - Downsample, epoch (into one big epoch, rather than many little windows), reject bad channels, and baseline-correct
