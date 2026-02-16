@@ -169,8 +169,8 @@ channelDetails(23).Subject = '13';
 channelDetails(23).Task = 'semanticjudgement';
 channelDetails(23).NotECoG = {'REFA01';'REFA02';'REFA03';'REFA04';'RDEL';'EKG';'DC04';'DC05';'DC06';'DC07';'DC08'};
 channelDetails(23).NotECoGType = {'REF';'REF';'REF';'REF';'MISC';'ECG';'TRIG';'TRIG';'TRIG';'TRIG';'TRIG'};
-channelDetails(23).BadElectrode = {'A01';'B01';'B02';'D01';'D02';'E01';'E02';};
-channelDetails(23).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'};
+channelDetails(23).BadElectrode = {'A01';'B01';'B02';'D01';'D02';'E01';'E02';'F17'};
+channelDetails(23).BadElectrodeStatusDescription = {'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'seizure onset zone'; 'bad electrode'};
 
 channelDetails(24).Subject = '14';
 channelDetails(24).Task = 'semanticjudgement';
