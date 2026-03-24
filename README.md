@@ -21,6 +21,7 @@ Preprocess all Kyoto ECoG data. These data can then be copied and used in a wide
 	- Low autocorrelation is characteristic of muscle activity. 
 	- Focal trial activity (meaning activity in only a few trials) is also characteristic of muscle activity.
 	- A high number of microsaccades per second indicates that the component may contain *only* microsaccades - by removing this component, you can remove microsaccades from the data.
+
 If a component has one of these three properties, you may wish to reject it. However, before rejecting a component based on any of these metrics, you should inspect the component and verify that it appears to contain only noise or saccades - no real signal. If a component has low focal trial activity, it is often easiest to inspect the components for every trial, identify the trial with the abnormal activity, and remove that trial. If you need to reject trials or components, you will need to rerun `reject_artefacts.m` again - keep rerunning until you are confident that all bad trials are rejected and that any components that should be rejected have been rejected. 
 
 ## Optional steps:
