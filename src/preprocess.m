@@ -205,7 +205,7 @@ function preprocess(p)
     
         % overwrite
         % 1 for true.
-        
+
         if strcmp(task,'naming')
             setup_naming_data( ...
             'WindowStart', -1000, ... 

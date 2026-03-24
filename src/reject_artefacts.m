@@ -17,11 +17,9 @@ function reject_artefacts(p)
     addpath([root,'/dependencies/']);
     addpath(genpath([root,'/dependencies/eeglab']));
     addpath(genpath([root,'/dependencies/cleanline']));
+    addpath(genpath([root,'/dependencies/SASICA']));
     cd(root);
     
-    %% TODO: specify bad trials
-    %% TODO: make sure that the right trials are rejected from the right dataset (naming/SJ) - dir does not always return files in the same order
-
     % get epoched data - naming and (if available) semantic judgement
     dataFiles = dir([root,'/work/sub-',p,'/*_epoched.mat']);
 
@@ -39,7 +37,9 @@ function reject_artefacts(p)
         EEG = eeg_checkset(EEG);
         % eeglab redraw
 
-        % create a filter
+        % create a filter. This will be used to filter out (1) trials
+        % exceeding the automatic threshold and (2) trials identified as
+        % bad via visual inspection (see below for full details).
         trialFilter = ones(size(data,3),1);
         
         %% STEP 1 - common average referencing
@@ -97,7 +97,7 @@ function reject_artefacts(p)
         ylabel('Number of outliers')
         title(['Sub-',p])
         saveas(gcf,[root,'/work/sub-',p,'/autorejection_per_channel.png'])
-        % close(gcf)   
+        close(gcf)   
         
         %% Stage 3 - manual trial rejection
             
@@ -116,6 +116,8 @@ function reject_artefacts(p)
 
         %% STEP 4 - Independent components analysis (ICA)
         
+        % bring the badTrials variable into the workspace
+        load([root,'/work/details_for_trial_rejection.mat']);
         % find the row of badTrials that corresponds to this patient and
         % task.
         % get the task
@@ -129,9 +131,11 @@ function reject_artefacts(p)
         % get number of timepoints (to help with data reshaping later)
         [~, nTimepoints, ~] = size(EEG.data);
 
-        % copy data (and save a copy for later)
+        % copy data to reshape ready for ICA
         ICAData = EEG.data;
-        data = EEG.data;
+        % (also save a copy of the data which will not be edited during
+        % ICA)
+        completeData = EEG.data;
         % reject trials that are flagged for rejection from the ICA data
         % (not from the main data!)
         ICAData(:,:,trialFilter==0) = [];
@@ -145,12 +149,12 @@ function reject_artefacts(p)
         [weights,sphere,compvars,bias,signs,lrates,ICs] = runica(ICAData,'extended',1,'PCA',round(size(ICAData,1)*0.75));
         
         % save the results of the ICA
-        save([root,'/work/sub-',p,'/ICA.mat'],'weights','sphere','compvars','bias','signs','lrates','ICs','-v7.3')
+        save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_ICA.mat'],'weights','sphere','compvars','bias','signs','lrates','ICs','-v7.3')
     
         % load the ICA results into EEGlab
-        EEG.icaweights=weights;
-        EEG.icasphere=sphere;
-        EEG.icawinv=pinv(EEG.icaweights*EEG.icasphere); % see https://sccn.ucsd.edu/pipermail/eeglablist/2009/002907.html to explain why this is so
+        EEG.icaweights = weights;
+        EEG.icasphere = sphere;
+        EEG.icawinv = pinv(EEG.icaweights*EEG.icasphere); % see https://sccn.ucsd.edu/pipermail/eeglablist/2009/002907.html to explain why this is so
         EEG.icaact = reshape(ICs,round(size(ICAData,1)*0.75),nTimepoints,[]);
         EEG = eeg_checkset(EEG);
         % eeglab redraw
@@ -163,13 +167,13 @@ function reject_artefacts(p)
         
             % configure SASICA
             cfg = SASICA('getdefs');
-            cfg.autocorr.enable = logical(1);
-            cfg.trialfoc.enable= logical(1);
+            cfg.autocorr.enable = true;
+            cfg.trialfoc.enable= true;
             % apply SASICA
             [EEG,cfg] = eeg_SASICA(EEG,cfg);
-            % list trials with low autocorrelation or high focal trial activity
-            flagcomps = find(EEG.reject.gcompreject);
-        
+            % save figure
+            saveas(gcf,[root,'/work/sub-',p,'/sub-',p,'_task-',task,'_SASICA.png'])
+           
             % Scroll component activations (view 20 trials at once for ease). See
             % whether you agree that the component looks noisy or has some unusual
             % trials. If you don't agree, don't reject the component. For focal
@@ -177,7 +181,7 @@ function reject_artefacts(p)
             % whole component. NOTE: because only the (assumed) good trials have
             % been loaded into EEGlab, the trial indices displayed by EEGlab will
             % not be the true trial indices in the complete data. To find the true
-            % trial indices to store in badtrials, use, for example:
+            % trial indices to store in badTrials, use, for example:
             % tmp = EEG.data(1,1,345)
             % [x,y,z] = ind2sub(size(completedata),find(completedata==tmp))
             % z is the trial index in the complete data. If there are multiple
@@ -206,30 +210,34 @@ function reject_artefacts(p)
             fICs = EEG.data;
             fICs = reshape(fICs, size(fICs,1), []);
         
-            % initialise variables
-            mpd=20; % Minimum peak distance for saccades - originally mpd=round(20/(1000/srate)).
-            locs = []; % this will contain the locations of the saccades within the IC
-            z=[]; % this will contain the saccade-template-filtered ICs
-        
+            % initialise variables - minimum distance between saccades (in
+            % miliseconds), saccade-filtered ICs, saccade rate
+            minPeakDistance = 20;
+            sfICs = [];
+            saccadeRate = zeros(1,size(ICs,1));
+            
             % for each component
             for i = 1:size(fICs,1)
                 % filter the component with a saccade template
-                z(i,:) = filtSRP(double(fICs(i,:))',1000);
-                [pks,locs] = findpeaks(z(i,:),'minpeakheight',2*mean(abs(z(i,:)),2),'minpeakdistance',mpd);
-                sac_rate(i) = length(locs)/(length(z)*1000); % number of events per second
+                sfICs(i,:) = filtSRP(double(fICs(i,:))',1000);
+                % get the locations of saccade events within the IC. Specify that these
+                % must be larger in amplitude than twice the mean and that
+                % they must be at least 20 ms apart
+                [~,locations] = findpeaks(sfICs(i,:),'minpeakheight',2*mean(abs(sfICs(i,:)),2),'minpeakdistance',minPeakDistance);
+                % calculate the number of events per second
+                saccadeRate(i) = length(locations)/(length(sfICs)*1000); % number of events per second
             end
-            % sort components by number of saccades
-            sortsacs = sortrows([1:length(sac_rate); sac_rate]',2,'descend')';
+
             % plot a figure to assess whether some components have dramatically
             % more microsaccades than others
             f = figure;
-            f = bar(sortsacs(2,:));
-            set(gca,'xtick',[])
+            bar(1:size(sfICs,1),saccadeRate');
+            set(gca,'xtick',1:size(sfICs,1));
             xlabel('Component')
             ylabel('Number of saccades')
             title(['Sub-',p])
-            saveas(gcf,[root,'/work/sub-',p,'/microsaccade_count.png'])
-            close(gcf)  
+            saveas(f,[root,'/work/sub-',p,'/sub-',p,'_task-',task,'_microsaccade-count.png'])
+            close(f)  
         
             %% IF YOU AGREE THAT COMPONENTS SHOULD BE REJECTED - reject components
         
@@ -248,27 +256,51 @@ function reject_artefacts(p)
         
         
             %% Save
-            save([root,'/work/sub-',p,'/clean.mat'],'X');
-            mkdir([root,'/inspected/sub-',p,'/'])
-            save([root,'/inspected/sub-',p,'/clean.mat'],'X');
-        
-            %% Save filter as part of metadata
-            load([root,'/work/sub-',p,'/full/BoxCar/001/WindowStart/-1000/WindowSize/4000/metadata__',p,'.mat'])
-            metadata.filters(10).label = 'badtrials';
-            metadata.filters(10).dimension = 1;
-            metadata.filters(10).filter = logical(trialfilter);
-            save([root,'/work/sub-',p,'/metadata.mat'],'metadata');
+            save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_preprocessed.mat'],'X','-v7.3');
         
             % Throw a warning if there is not at least one good trial for each
             % stimulus.
-            detector = trialfilter(1:100)+trialfilter(101:200)+trialfilter(201:300)+trialfilter(301:400);
-            livingdetector = trialfilter(1:50)+trialfilter(101:150)+trialfilter(201:250)+trialfilter(301:350);
-            nonlivingdetector = trialfilter(51:100)+trialfilter(151:200)+trialfilter(251:300)+trialfilter(351:400);
-            if ~isempty(find(detector==0))
-                warning(['participant ',p,' is missing ',num2str(length(find(livingdetector==0))),' living trials and ',num2str(length(find(nonlivingdetector==0))),' nonliving trials.'])
+            
+            % if it is naming data
+            if strcmp(task,'naming')
+                % there are 400 trials - 4 repeats of 100 stimuli. Count
+                % how many repeats of each stimulus are good
+                nGoodTrials = trialFilter(1:100) + trialFilter(101:200) + trialFilter(201:300) + trialFilter(301:400);
+                % if there are items with no good trials
+                if ~isempty(find(nGoodTrials == 0))
+                    % throw a warning, explaining how many living and
+                    % nonliving stimuli are missing any good trials
+                    warning(['Participant ',p,' lacks any good trials for ',num2str(length(find(nGoodTrials == 0))),' items: ',num2str(length(find(nGoodTrials(1:50) == 0))),' living items and ',num2str(length(find(nGoodTrials(51:100) == 0))),' nonliving items.']);
+                end
+            
+            % else if it is semantic judgement data
+            elseif strcmp(task,'semanticjudgement')
+                % there are 960 trials. The first 3 blocks of 96 are visual
+                % semantic, the next 3 blocks of 96 are auditory semantic,
+                % the next 2 blocks are visual control, and the final 2
+                % blocks are auditory control. 
+                nGoodTrials(:,1) = trialFilter(1:96) + trialFilter(97:192) + trialFilter(193:288);
+                nGoodTrials(:,2) = trialFilter(289:384) + trialFilter(385:480) + trialFilter(481:576);
+                nGoodTrials(:,3) = trialFilter(577:672) + trialFilter(673:768);
+                nGoodTrials(:,4) = trialFilter(769:864) + trialFilter(865:960);
+                % within each block, stimuli 1:24 are living, stimuli 25:48
+                % are nonliving, stimuli 49:72 are the SAME living stimuli,
+                % and stimuli 73:96 are the SAME nonliving stimuli. Count
+                % how many repeats of the same stimulus are good
+                nGoodTrials = nGoodTrials(1:48,:) + nGoodTrials(49:96,:);
+
+                 if ~isempty(find(nGoodTrials == 0))
+                    % throw a warning, explaining how many living and
+                    % nonliving stimuli are missing any good trials
+                    warning(['Participant ',p,' lacks any good trials for ',num2str(length(find(nGoodTrials == 0))),' items: ' ...
+                        num2str(length(find(nGoodTrials(:,1) == 0))), ' visual semantic items (',num2str(length(find(nGoodTrials(1:24,1) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,1) == 0))),' nonliving), ' ...
+                        num2str(length(find(nGoodTrials(:,2) == 0))), ' auditory semantic items (',num2str(length(find(nGoodTrials(1:24,2) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,2) == 0))),' nonliving), ' ...
+                        num2str(length(find(nGoodTrials(:,3) == 0))), ' visual control items (',num2str(length(find(nGoodTrials(1:24,3) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,3) == 0))),' nonliving), ' ...
+                        num2str(length(find(nGoodTrials(:,4) == 0))), ' auditory control items (',num2str(length(find(nGoodTrials(1:24,4) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,4) == 0))),' nonliving).'])    
+                end
+       
             end
-        
-            %% Clear
-            clearvars -except root subs badtrials
+            % done
+            disp('Done!')
     end
 

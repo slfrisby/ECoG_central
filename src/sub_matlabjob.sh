@@ -8,7 +8,11 @@ dirp=/group/mlr-lab/Saskia/ECoG_central
 work=/group/mlr-lab/Saskia/ECoG_central/work
 
 # runs hands-off section of preprocessing 
-matlab_r2023b -nodisplay -nodesktop -r "addpath('$dirp/src/');preprocess('"$p"');exit"
+# matlab_r2023b -nodisplay -nodesktop -r "addpath('$dirp/src/');preprocess('"$p"');exit"
+
+# runs preprocessing following visual inspection
+matlab_r2023b -nodisplay -nodesktop -r "addpath('$dirp/src/');reject_artefacts('"$p"');exit"
+
 
 
 

@@ -17,7 +17,11 @@ Preprocess all Kyoto ECoG data. These data can then be copied and used in a wide
 4. **Convert data to BIDS format** (well, imperfect BIDS format!) using `convert_to_BIDS.m`.
 5. **Run the hands-free section of the preprocessing pipeline** using `preprocess.m`. If you have access to a high-performance cluster, use `sub_job.sh` to preprocess all participants in parallel.
 	- Note that the scripts `setup_naming_data.m` and `setup_semantic_judgement_data.m`, called within this script, arrange the data so that each row is a trial. Naming data have 400 rows - 4 blocks of the same 100 stimuli. Within each block, stimuli 1:50 are living and stimuli 51:100 are nonliving. Semantic judgement data have 960 rows - 10 blocks of 96 stimuli. Within each block, stimuli 1:24 are living, stimuli 25:48 are nonliving, stimuli 49:72 are the SAME living stimuli, and stimuli 73:96 are the SAME nonliving stimuli. Blocks are in this order: visual semantic block 1, visual semantic block 2, visual semantic block 3, auditory semantic block 1, auditory semantic block 2, auditory semantic block 3, visual control block 1, visual control block 2, auditory control block 1, auditory control block 2. 
-
+6. **Run the hands-on section of the preprocessing pipeline** using `reject_artefacts.m`. Run the script line by line until line 104, then scroll through the data and mark trials that appear to contain ictal or interictal activity, electrode pop, or other artefacts, for rejection. Record which trials will be rejected in `specify_bad_trials.m`. Once `specify_bad_trials.m` is complete, run the whole script. The script conducts ICA (which takes some time!), so, if you have access to a high-performance cluster, use `sub_job.sh` to run the entire script for all participants in parallel. The script plots summary statistics about the ICA components:
+	- Low autocorrelation is characteristic of muscle activity. 
+	- Focal trial activity (meaning activity in only a few trials) is also characteristic of muscle activity.
+	- A high number of microsaccades per second indicates that the component may contain *only* microsaccades - by removing this component, you can remove microsaccades from the data.
+If a component has one of these three properties, you may wish to reject it. However, before rejecting a component based on any of these metrics, you should inspect the component and verify that it appears to contain only noise or saccades - no real signal. If a component has low focal trial activity, it is often easiest to inspect the components for every trial, identify the trial with the abnormal activity, and remove that trial. If you need to reject trials or components, you will need to rerun `reject_artefacts.m` again - keep rerunning until you are confident that all bad trials are rejected and that any components that should be rejected have been rejected. 
 
 ## Optional steps:
 - Use `plot_electrode_locations.m` to visualise electrodes on the brain for the whole participant group.
@@ -27,4 +31,4 @@ Preprocess all Kyoto ECoG data. These data can then be copied and used in a wide
 ## Useful links
 - Overview of iEEG-BIDS structure: https://bids.neuroimaging.io/getting_started/tutorials/conversion/ieeg.html?h=ieeg
 - Glossary - useful for learning what to include in each file and in what format: https://bids-specification.readthedocs.io/en/stable/
-
+- Guide to ictal and interictal activity: https://www.learningeeg.com/
