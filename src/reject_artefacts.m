@@ -17,7 +17,7 @@ function reject_artefacts(p)
     addpath([root,'/dependencies/']);
     addpath(genpath([root,'/dependencies/eeglab']));
     addpath(genpath([root,'/dependencies/cleanline']));
-    addpath(genpath([root,'/dependencies/SASICA']));
+    addpath([root,'/dependencies/SASICA']);
     cd(root);
     
     % get epoched data - naming and (if available) semantic judgement
@@ -116,7 +116,10 @@ function reject_artefacts(p)
 
         %% STEP 4 - Independent components analysis (ICA)
         
-        % bring the badTrials variable into the workspace
+        % check that we are using the most up-to-date version of the bad
+        % trials list
+        specify_bad_trials;
+        % then bring the badTrials variable into the workspace
         load([root,'/work/details_for_trial_rejection.mat']);
         % find the row of badTrials that corresponds to this patient and
         % task.
@@ -146,11 +149,13 @@ function reject_artefacts(p)
         
         % Conduct ICA. The number of ICs is 75% the number of good electrodes
         % (Clarke 2020).
-        [weights,sphere,compvars,bias,signs,lrates,ICs] = runica(ICAData,'extended',1,'PCA',round(size(ICAData,1)*0.75));
-        
+        [weights,sphere,compvars,bias,signs,lrates,ICs] = runica(ICAData,'extended',1,'PCA',round(size(ICAData,1)*0.75));   
         % save the results of the ICA
         save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_ICA.mat'],'weights','sphere','compvars','bias','signs','lrates','ICs','-v7.3')
-    
+        
+        % (or, if the ICA has already been run, just load the ICA results)
+        % load([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_ICA.mat']);
+
         % load the ICA results into EEGlab
         EEG.icaweights = weights;
         EEG.icasphere = sphere;
@@ -161,146 +166,149 @@ function reject_artefacts(p)
            
         %% STEP 4.1 - SASICA
         
-            % We use SASICA to flag components with low autocorrelation
-            % (usually represents muscle activity) and/or high focal trial acrivity
-            % (usually represents muscle activity, electrode pop, or similar).
-        
-            % configure SASICA
-            cfg = SASICA('getdefs');
-            cfg.autocorr.enable = true;
-            cfg.trialfoc.enable= true;
-            % apply SASICA
-            [EEG,cfg] = eeg_SASICA(EEG,cfg);
-            % save figure
-            saveas(gcf,[root,'/work/sub-',p,'/sub-',p,'_task-',task,'_SASICA.png'])
-           
-            % Scroll component activations (view 20 trials at once for ease). See
-            % whether you agree that the component looks noisy or has some unusual
-            % trials. If you don't agree, don't reject the component. For focal
-            % trial activity, consider rejecting the focal trials rather than the
-            % whole component. NOTE: because only the (assumed) good trials have
-            % been loaded into EEGlab, the trial indices displayed by EEGlab will
-            % not be the true trial indices in the complete data. To find the true
-            % trial indices to store in badTrials, use, for example:
-            % tmp = EEG.data(1,1,345)
-            % [x,y,z] = ind2sub(size(completedata),find(completedata==tmp))
-            % z is the trial index in the complete data. If there are multiple
-            % values of z, the correct value is the one where x = 1 and y = 1.
-        
-            % eegplot(EEG.data)
-        
-            %% 4.2 - Microsaccade filtering
-        
-            % This is based on the method of Clarke (2020). It works by:
-                % 1. Performing ICA
-                % 2. Filtering independent components for gamma/high gamma (the range in which we
-                % expect to see microsaccadic activity)
-                % 3. Convolving a template of saccade-related activity with the ICA
-                % components
-                % 4. Plotting a graph showing which components have the highest
-                % number of saccade events. If it is clear that one or two
-                % components have MANY more saccade events than others, these
-                % components should be rejected.
-        
-            % Load the independent components into the data space of eeglab in order to use the filter  
-            EEG.data = ICs;
-            EEG = eeg_checkset(EEG);
-            % filter the components for gamma and high-gamma activity
-            EEG = pop_eegfiltnew(EEG,'locutoff',20,'hicutoff',190,'plotfreqz',0);
-            fICs = EEG.data;
-            fICs = reshape(fICs, size(fICs,1), []);
-        
-            % initialise variables - minimum distance between saccades (in
-            % miliseconds), saccade-filtered ICs, saccade rate
-            minPeakDistance = 20;
-            sfICs = [];
-            saccadeRate = zeros(1,size(ICs,1));
-            
-            % for each component
-            for i = 1:size(fICs,1)
-                % filter the component with a saccade template
-                sfICs(i,:) = filtSRP(double(fICs(i,:))',1000);
-                % get the locations of saccade events within the IC. Specify that these
-                % must be larger in amplitude than twice the mean and that
-                % they must be at least 20 ms apart
-                [~,locations] = findpeaks(sfICs(i,:),'minpeakheight',2*mean(abs(sfICs(i,:)),2),'minpeakdistance',minPeakDistance);
-                % calculate the number of events per second
-                saccadeRate(i) = length(locations)/(length(sfICs)*1000); % number of events per second
-            end
-
-            % plot a figure to assess whether some components have dramatically
-            % more microsaccades than others
-            f = figure;
-            bar(1:size(sfICs,1),saccadeRate');
-            set(gca,'xtick',1:size(sfICs,1));
-            xlabel('Component')
-            ylabel('Number of saccades')
-            title(['Sub-',p])
-            saveas(f,[root,'/work/sub-',p,'/sub-',p,'_task-',task,'_microsaccade-count.png'])
-            close(f)  
-        
-            %% IF YOU AGREE THAT COMPONENTS SHOULD BE REJECTED - reject components
-        
-            % % list components
-            % comps2keep = 1:size(ICs,1);
-            % % mark flagged components for removal
-            % comps2keep(ismember(comps2keep,flagcomps))=[];
-            % icadat = reshape(completedata,size(completedata,1),[]);
-            % % reject and reconstruct
-            % [icaprojdata] = icaproj(icadat,weights,comps2keep);
-            % % reshape
-            % X = reshape(icaprojdata,s1,s2,s3);
-        
-            %% IF NO COMPONENTS NEED REJECTING
-            X = completeData;
-        
-        
-            %% Save
-            save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_preprocessed.mat'],'X','-v7.3');
-        
-            % Throw a warning if there is not at least one good trial for each
-            % stimulus.
-            
-            % if it is naming data
-            if strcmp(task,'naming')
-                % there are 400 trials - 4 repeats of 100 stimuli. Count
-                % how many repeats of each stimulus are good
-                nGoodTrials = trialFilter(1:100) + trialFilter(101:200) + trialFilter(201:300) + trialFilter(301:400);
-                % if there are items with no good trials
-                if ~isempty(find(nGoodTrials == 0))
-                    % throw a warning, explaining how many living and
-                    % nonliving stimuli are missing any good trials
-                    warning(['Participant ',p,' lacks any good trials for ',num2str(length(find(nGoodTrials == 0))),' items: ',num2str(length(find(nGoodTrials(1:50) == 0))),' living items and ',num2str(length(find(nGoodTrials(51:100) == 0))),' nonliving items.']);
-                end
-            
-            % else if it is semantic judgement data
-            elseif strcmp(task,'semanticjudgement')
-                % there are 960 trials. The first 3 blocks of 96 are visual
-                % semantic, the next 3 blocks of 96 are auditory semantic,
-                % the next 2 blocks are visual control, and the final 2
-                % blocks are auditory control. 
-                nGoodTrials(:,1) = trialFilter(1:96) + trialFilter(97:192) + trialFilter(193:288);
-                nGoodTrials(:,2) = trialFilter(289:384) + trialFilter(385:480) + trialFilter(481:576);
-                nGoodTrials(:,3) = trialFilter(577:672) + trialFilter(673:768);
-                nGoodTrials(:,4) = trialFilter(769:864) + trialFilter(865:960);
-                % within each block, stimuli 1:24 are living, stimuli 25:48
-                % are nonliving, stimuli 49:72 are the SAME living stimuli,
-                % and stimuli 73:96 are the SAME nonliving stimuli. Count
-                % how many repeats of the same stimulus are good
-                nGoodTrials = nGoodTrials(1:48,:) + nGoodTrials(49:96,:);
-
-                 if ~isempty(find(nGoodTrials == 0))
-                    % throw a warning, explaining how many living and
-                    % nonliving stimuli are missing any good trials
-                    warning(['Participant ',p,' lacks any good trials for ',num2str(length(find(nGoodTrials == 0))),' items: ' ...
-                        num2str(length(find(nGoodTrials(:,1) == 0))), ' visual semantic items (',num2str(length(find(nGoodTrials(1:24,1) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,1) == 0))),' nonliving), ' ...
-                        num2str(length(find(nGoodTrials(:,2) == 0))), ' auditory semantic items (',num2str(length(find(nGoodTrials(1:24,2) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,2) == 0))),' nonliving), ' ...
-                        num2str(length(find(nGoodTrials(:,3) == 0))), ' visual control items (',num2str(length(find(nGoodTrials(1:24,3) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,3) == 0))),' nonliving), ' ...
-                        num2str(length(find(nGoodTrials(:,4) == 0))), ' auditory control items (',num2str(length(find(nGoodTrials(1:24,4) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,4) == 0))),' nonliving).'])    
-                end
+        % We use SASICA to flag components with low autocorrelation
+        % (usually represents muscle activity) and/or high focal trial acrivity
+        % (usually represents muscle activity, electrode pop, or similar).
+    
+        % configure SASICA
+        cfg = SASICA('getdefs');
+        cfg.autocorr.enable = true;
+        cfg.trialfoc.enable= true;
+        % apply SASICA
+        [EEG,cfg] = eeg_SASICA(EEG,cfg);
+        % save figure
+        saveas(gcf,[root,'/work/sub-',p,'/sub-',p,'_task-',task,'_SASICA.png'])
        
+        % Scroll component activations (view 20 trials at once for ease, and
+        % set y-axis to 100, or to 200 if wicket spikes are very pronouned, or 20 if activations are very small). See
+        % whether you agree that the component looks noisy or has some unusual
+        % trials. If you don't agree, don't reject the component. For focal
+        % trial activity, consider rejecting the focal trials rather than the
+        % whole component. NOTE: because only the (assumed) good trials have
+        % been loaded into EEGlab, the trial indices displayed by EEGlab will
+        % not be the true trial indices in the complete data. To find the true
+        % trial indices to store in badTrials, use, for example:
+        % tmp = EEG.data(1,1,345)
+        % [x,y,z] = ind2sub(size(completeData),find(completeData==tmp))
+        % z is the trial index in the complete data. If there are multiple
+        % values of z, the correct value is the one where x = 1 and y = 1.
+    
+        %% 4.2 - Microsaccade filtering
+    
+        % This is based on the method of Clarke (2020). It works by:
+            % 1. Performing ICA
+            % 2. Filtering independent components for gamma/high gamma (the range in which we
+            % expect to see microsaccadic activity)
+            % 3. Convolving a template of saccade-related activity with the ICA
+            % components
+            % 4. Plotting a graph showing which components have the highest
+            % number of saccade events. If it is clear that one or two
+            % components have MANY more saccade events than others, these
+            % components should be rejected.
+    
+        % Load the independent components into the data space of eeglab in
+        % order to use the filter. (We need to re-initialise eeglab so that
+        % it doesn't throw errors when the components have different
+        % dimensions to the ordinary data.)
+        load([root,'/src/eeglab_init.mat']);
+        EEG.data = ICs;
+        EEG = eeg_checkset(EEG);
+        % filter the components for gamma and high-gamma activity
+        EEG = pop_eegfiltnew(EEG,'locutoff',20,'hicutoff',190,'plotfreqz',0);
+        fICs = EEG.data;
+        fICs = reshape(fICs, size(fICs,1), []);
+    
+        % initialise variables - minimum distance between saccades (in
+        % miliseconds), saccade-filtered ICs, saccade rate
+        minPeakDistance = 20;
+        sfICs = [];
+        saccadeRate = zeros(1,size(ICs,1));
+        
+        % for each component
+        for i = 1:size(fICs,1)
+            % filter the component with a saccade template
+            sfICs(i,:) = filtSRP(double(fICs(i,:))',1000);
+            % get the locations of saccade events within the IC. Specify that these
+            % must be larger in amplitude than twice the mean and that
+            % they must be at least 20 ms apart
+            [~,locations] = findpeaks(sfICs(i,:),'minpeakheight',2*mean(abs(sfICs(i,:)),2),'minpeakdistance',minPeakDistance);
+            % calculate the number of events per second
+            saccadeRate(i) = length(locations)/(length(sfICs)*1000); % number of events per second
+        end
+
+        % plot a figure to assess whether some components have dramatically
+        % more microsaccades than others
+        f = figure;
+        bar(1:size(sfICs,1),saccadeRate');
+        set(gca,'xtick',1:size(sfICs,1));
+        xlabel('Component')
+        ylabel('Number of saccades')
+        title(['Sub-',p])
+        saveas(f,[root,'/work/sub-',p,'/sub-',p,'_task-',task,'_microsaccade-count.png'])
+        close(f)  
+    
+        %% IF YOU AGREE THAT COMPONENTS SHOULD BE REJECTED - reject components
+    
+        % % list components
+        % comps2keep = 1:size(ICs,1);
+        % % mark flagged components for removal
+        % comps2keep(ismember(comps2keep,flagcomps))=[];
+        % icadat = reshape(completedata,size(completedata,1),[]);
+        % % reject and reconstruct
+        % [icaprojdata] = icaproj(icadat,weights,comps2keep);
+        % % reshape
+        % X = reshape(icaprojdata,s1,s2,s3);
+    
+        %% IF NO COMPONENTS NEED REJECTING
+        X = completeData;
+    
+    
+        %% Save
+        save([root,'/work/sub-',p,'/sub-',p,'_task-',task,'_preprocessed.mat'],'X','-v7.3');
+    
+        % Throw a warning if there is not at least one good trial for each
+        % stimulus.
+        
+        % if it is naming data
+        if strcmp(task,'naming')
+            % there are 400 trials - 4 repeats of 100 stimuli. Count
+            % how many repeats of each stimulus are good
+            nGoodTrials = trialFilter(1:100) + trialFilter(101:200) + trialFilter(201:300) + trialFilter(301:400);
+            % if there are items with no good trials
+            if ~isempty(find(nGoodTrials == 0))
+                % throw a warning, explaining how many living and
+                % nonliving stimuli are missing any good trials
+                warning(['Participant ',p,' lacks any good trials for ',num2str(length(find(nGoodTrials == 0))),' items: ',num2str(length(find(nGoodTrials(1:50) == 0))),' living items and ',num2str(length(find(nGoodTrials(51:100) == 0))),' nonliving items.']);
             end
-            % done
-            disp('Done!')
+        
+        % else if it is semantic judgement data
+        elseif strcmp(task,'semanticjudgement')
+            % there are 960 trials. The first 3 blocks of 96 are visual
+            % semantic, the next 3 blocks of 96 are auditory semantic,
+            % the next 2 blocks are visual control, and the final 2
+            % blocks are auditory control. 
+            nGoodTrials(:,1) = trialFilter(1:96) + trialFilter(97:192) + trialFilter(193:288);
+            nGoodTrials(:,2) = trialFilter(289:384) + trialFilter(385:480) + trialFilter(481:576);
+            nGoodTrials(:,3) = trialFilter(577:672) + trialFilter(673:768);
+            nGoodTrials(:,4) = trialFilter(769:864) + trialFilter(865:960);
+            % within each block, stimuli 1:24 are living, stimuli 25:48
+            % are nonliving, stimuli 49:72 are the SAME living stimuli,
+            % and stimuli 73:96 are the SAME nonliving stimuli. Count
+            % how many repeats of the same stimulus are good
+            nGoodTrials = nGoodTrials(1:48,:) + nGoodTrials(49:96,:);
+
+             if ~isempty(find(nGoodTrials == 0))
+                % throw a warning, explaining how many living and
+                % nonliving stimuli are missing any good trials
+                warning(['Participant ',p,' lacks any good trials for ',num2str(length(find(nGoodTrials == 0))),' items: ' ...
+                    num2str(length(find(nGoodTrials(:,1) == 0))), ' visual semantic items (',num2str(length(find(nGoodTrials(1:24,1) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,1) == 0))),' nonliving), ' ...
+                    num2str(length(find(nGoodTrials(:,2) == 0))), ' auditory semantic items (',num2str(length(find(nGoodTrials(1:24,2) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,2) == 0))),' nonliving), ' ...
+                    num2str(length(find(nGoodTrials(:,3) == 0))), ' visual control items (',num2str(length(find(nGoodTrials(1:24,3) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,3) == 0))),' nonliving), ' ...
+                    num2str(length(find(nGoodTrials(:,4) == 0))), ' auditory control items (',num2str(length(find(nGoodTrials(1:24,4) == 0))),' living and ',num2str(length(find(nGoodTrials(25:48,4) == 0))),' nonliving).'])    
+            end
+   
+        end
+        % done
+        disp('Done!')
     end
 
