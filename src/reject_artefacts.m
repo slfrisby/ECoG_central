@@ -211,6 +211,7 @@ function reject_artefacts(p)
         % it doesn't throw errors when the components have different
         % dimensions to the ordinary data.)
         load([root,'/src/eeglab_init.mat']);
+        EEG.srate = 1000; % data collected at 2000 Hz have now been downsampled to 1000 Hz
         EEG.data = ICs;
         EEG = eeg_checkset(EEG);
         % filter the components for gamma and high-gamma activity
